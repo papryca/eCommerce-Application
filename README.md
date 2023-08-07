@@ -1,6 +1,6 @@
 # 🛍️🌐 eCommerce Application
 
-__*[RS School](https://rs.school/) final task project*__
+**_[RS School](https://rs.school/) final task project_**
 
 Welcome to our eCommerce application! This platform replicates real-world shopping experiences in a digital environment. It's a comprehensive online shopping portal that provides an interactive and seamless experience to users.
 
@@ -89,7 +89,7 @@ The application will open in your default browser, allowing you to explore and i
 
 This project is developed by a team talented developers:
 
-- 👨‍🏫  [aleksey-drozdov](https://github.com/aleksey-drozdov) - Mentor
+- 👨‍🏫 [aleksey-drozdov](https://github.com/aleksey-drozdov) - Mentor
 - 👩‍💼 [elen-jagger](https://github.com/elen-jagger) - [elena.leusik@gmail.com](mailto:elena.leusik@gmail.com)
 - 👩‍💼 [papryca](https://github.com/papryca) - [inessasmorgunova@gmail.com](mailto:inessasmorgunova@gmail.com)
 - 👨‍💼 [RoierS](https://github.com/RoierS) - [iermoliuk.roman@gmail.com](mailto:iermoliuk.roman@gmail.com)
