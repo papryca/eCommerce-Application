@@ -7,7 +7,7 @@ function AppHeader() {
         <h1 className="header__home">
           <Link to="/">Home</Link>
         </h1>
-        <div className="header__navigation">
+        <div className="header__right">
           <p className="header__login">
             <NavLink
               end
