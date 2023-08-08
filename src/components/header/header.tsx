@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 
-function AppHeader() {
+const AppHeader = () => {
   return (
     <header className="header">
       <nav className="header__navigation">
@@ -30,6 +30,6 @@ function AppHeader() {
       </nav>
     </header>
   );
-}
+};
 
 export default AppHeader;

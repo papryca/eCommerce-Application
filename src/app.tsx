@@ -7,7 +7,7 @@ import Login from "./pages/login/login";
 import Home from "./pages/main/main";
 import Registration from "./pages/registration/registration";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <div className="app">
@@ -22,6 +22,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;
