@@ -27,10 +27,13 @@
   },
   "rules": {
     "import/no-extraneous-dependencies": "off",
-    "react/function-component-definition": ["error", {
-      "namedComponents": "arrow-function",
-      "unnamedComponents": "arrow-function"
-    }],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
     "react/react-in-jsx-scope": ["off"],
     "react/jsx-uses-react": ["off"],
     "react/jsx-props-no-spreading": ["warn"],
