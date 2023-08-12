@@ -39,25 +39,41 @@
     "react/jsx-props-no-spreading": ["warn"],
     "react/no-unescaped-entities": ["off"],
     "@typescript-eslint/no-explicit-any": "error",
+    "import/first": "error",
+    "import/no-duplicates": "error",
     "import/order": [
       "error",
       {
         "groups": [
           "external",
-          "builtin",
           "internal",
-          "sibling",
+          "builtin",
           "parent",
-          "index"
+          "sibling",
+          "index",
+          "object",
+          "type",
+          "unknown"
         ],
         "pathGroups": [
           {
-            "pattern": "components",
-            "group": "internal"
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
           },
           {
-            "pattern": "assets/**",
-            "group": "internal",
+            "pattern": "react-hook-form",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "@hookform/**",
+            "group": "external",
+            "position": "after"
+          },
+          {
+            "pattern": "@mui/**",
+            "group": "external",
             "position": "after"
           },
           {
@@ -66,12 +82,27 @@
             "position": "after"
           },
           {
+            "pattern": "components/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "assets/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
             "pattern": "*.{css,scss}",
-            "group": "index",
+            "group": "unknown",
+            "position": "after"
+          },
+          {
+            "pattern": "./**.{css,scss}",
+            "group": "unknown",
             "position": "after"
           }
         ],
-        "pathGroupsExcludedImportTypes": ["internal"],
+        "pathGroupsExcludedImportTypes": [],
         "alphabetize": {
           "order": "asc",
           "caseInsensitive": true

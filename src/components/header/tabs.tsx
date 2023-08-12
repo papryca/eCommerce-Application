@@ -1,7 +1,8 @@
+import React from "react";
+
 import CottageTwoToneIcon from "@mui/icons-material/CottageTwoTone";
 import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
-import React from "react";
 
 interface IHeaderTab {
   index: number;

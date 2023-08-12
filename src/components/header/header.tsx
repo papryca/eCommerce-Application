@@ -1,6 +1,8 @@
-import { Box, Tabs, Tab } from "@mui/material";
 import React from "react";
+
 import { Link, useLocation } from "react-router-dom";
+
+import { Box, Tab, Tabs } from "@mui/material";
 
 import tabs from "./tabs";
 
