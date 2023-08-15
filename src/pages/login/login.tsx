@@ -1,7 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
+import AppHeader from "@components/header/header";
 import { ILoginFormData } from "@interfaces/login-form-data";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -46,62 +47,65 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Box className={styles.container}>
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name="email"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              label="Email"
-              fullWidth
-              error={!!errors.email}
-              variant="outlined"
-              helperText={errors.email?.message}
-              InputProps={{
-                ...field,
-                autoComplete: "off",
-              }}
-            />
-          )}
-        />
-        <Controller
-          name="password"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              label="Password"
-              fullWidth
-              variant="outlined"
-              type={showPassword ? "text" : "password"}
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={handleTogglePassword}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-                ...field,
-                autoComplete: "off",
-              }}
-            />
-          )}
-        />
-        <Button
-          className="button"
-          type="submit"
-          variant="contained"
-          color="primary"
-        >
-          Login
-        </Button>
-      </form>
-    </Box>
+    <>
+      <AppHeader />
+      <Box className={styles.container}>
+        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            name="email"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                label="Email"
+                fullWidth
+                error={!!errors.email}
+                variant="outlined"
+                helperText={errors.email?.message}
+                InputProps={{
+                  ...field,
+                  autoComplete: "off",
+                }}
+              />
+            )}
+          />
+          <Controller
+            name="password"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <TextField
+                label="Password"
+                fullWidth
+                variant="outlined"
+                type={showPassword ? "text" : "password"}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleTogglePassword}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  ...field,
+                  autoComplete: "off",
+                }}
+              />
+            )}
+          />
+          <Button
+            className="button"
+            type="submit"
+            variant="contained"
+            color="primary"
+          >
+            Login
+          </Button>
+        </form>
+      </Box>
+    </>
   );
 };
 

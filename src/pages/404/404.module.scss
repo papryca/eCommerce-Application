@@ -1,0 +1,17 @@
+@import "../../sass/abstract/constants";
+
+.image {
+  display: block;
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+}
+.error {
+  text-align: center;
+  font-size: 2.6rem;
+  color: $color-text;
+}
+.button {
+  margin: 90px auto 0 auto;
+  text-align: center;
+}

@@ -1,5 +1,12 @@
+import AppHeader from "../../components/header/header";
+
 const Registration = () => {
-  return <div>This is the Registration page</div>;
+  return (
+    <>
+      <AppHeader />
+      <div>This is the Registration page</div>
+    </>
+  );
 };
 
 export default Registration;
