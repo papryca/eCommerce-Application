@@ -1,35 +1,26 @@
+import emailValidation from "@constants/email-validation";
+import validationErrors from "@constants/validation-errors";
 import * as yup from "yup";
-
-import emailValidation from "../../constants/email-validation";
 
 // Schema for validation of Login Form
 const schemaLogin = yup.object({
   email: yup
     .string()
-    .required("This field is required")
-    .matches(emailValidation, "Invalid email format"),
+    .required(validationErrors.required())
+    .matches(emailValidation, validationErrors.invalidFormat()),
   password: yup
     .string()
-    .required("This field is required")
-    .matches(
-      /[A-Z]/,
-      "Password must contain at least one uppercase letter (A-Z)"
-    )
-    .matches(
-      /[a-z]/,
-      "Password must contain at least one lowercase letter (a-z)"
-    )
-    .matches(/\d/, "Password must contain at least one digit (0-9)")
-    .matches(
-      /[!@#$%^&*]/,
-      "Password must contain at least one special character (!@#$%^&*)"
-    )
+    .required(validationErrors.required())
+    .matches(/[A-Z]/, validationErrors.uppercase())
+    .matches(/[a-z]/, validationErrors.lowercase())
+    .matches(/\d/, validationErrors.digit())
+    .matches(/[!@#$%^&*]/, validationErrors.specialChar())
     .test(
       "noWhitespace",
-      "Password must not contain leading or trailing whitespace",
+      validationErrors.noWhitespace(),
       (value) => !value.includes(" ")
     )
-    .min(8, "Must be more than 8 characters"),
+    .min(8, validationErrors.min(8)),
 });
 
 export default schemaLogin;

@@ -67,6 +67,11 @@
             "position": "before"
           },
           {
+            "pattern": "axios",
+            "group": "external",
+            "position": "before"
+          },
+          {
             "pattern": "@hookform/**",
             "group": "external",
             "position": "after"
