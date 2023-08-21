@@ -118,16 +118,16 @@ const schemaRegister = yup.object({
         parent: { billingCountry },
       } = validationContext;
 
-      if (billingCountry === "Austria" && !value.match(/^[0-9]{4,4}$/)) {
+      if (billingCountry === "AT" && !value.match(/^[0-9]{4,4}$/)) {
         return createError({ message: "Postcode must contain 4 digits" });
       }
 
-      if (billingCountry === "Belarus" && !value.match(/^[0-9]{6,6}$/)) {
+      if (billingCountry === "BY" && !value.match(/^[0-9]{6,6}$/)) {
         return createError({ message: "Postcode must contain 6 digits" });
       }
 
       if (
-        billingCountry === "Poland" &&
+        billingCountry === "PL" &&
         !value.match(/^([0-9]{2,2})-([0-9]{3,3})$/)
       ) {
         return createError({
@@ -135,7 +135,7 @@ const schemaRegister = yup.object({
         });
       }
 
-      if (billingCountry === "USA" && !value.match(/^[0-9]{5,5}$/)) {
+      if (billingCountry === "US" && !value.match(/^[0-9]{5,5}$/)) {
         return createError({ message: "Postcode must contain 5 digits" });
       }
 

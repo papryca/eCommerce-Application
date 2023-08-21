@@ -6,13 +6,9 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 
 import AppHeader from "@components/header/header";
-import { ILoginFormData } from "@interfaces/login-form-data";
+import { ILoginData } from "@interfaces/login-form-data";
 
-// import { ITokenResponse } from "@interfaces/token-response";
-import {
-  obtainAccessTokenPassFlow,
-  loginCustomer,
-} from "@services/commerce-tools-service";
+import { getTokenAndLogin } from "@services/authentication-service";
 import { useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -42,7 +38,7 @@ const Login: React.FC = () => {
     control,
     formState: { errors },
     setError,
-  } = useForm<ILoginFormData>({
+  } = useForm<ILoginData>({
     resolver: yupResolver(schemaLogin),
     mode: "onChange",
   });
@@ -53,19 +49,9 @@ const Login: React.FC = () => {
   };
 
   // Handle form submission
-  const onSubmit: SubmitHandler<ILoginFormData> = async (data) => {
+  const onSubmit: SubmitHandler<ILoginData> = async (data) => {
     try {
-      const tokenObject = await obtainAccessTokenPassFlow(
-        data.email,
-        data.password
-      );
-      localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
-
-      const customerInfo = await loginCustomer(
-        tokenObject.access_token,
-        data.email,
-        data.password
-      );
+      const customerInfo = await getTokenAndLogin(data);
 
       console.log("Customer logged in successfully", customerInfo);
 

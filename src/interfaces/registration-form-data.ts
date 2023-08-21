@@ -13,3 +13,30 @@ export interface IRegisterFormData {
   billingCountry: string;
   billingPostcode: string;
 }
+
+export interface IBaseAddress {
+  country: string;
+  streetName?: string;
+  postalCode?: string;
+  city?: string;
+}
+
+export interface IRegistrateData {
+  addresses: IBaseAddress[];
+  email: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  password: string;
+  shippingAddresses: number[];
+  defaultShippingAddress?: number;
+  billingAddresses: number[];
+  defaultBillingAddress?: number;
+}
+
+export interface ICustomerRegistrationResponse {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
