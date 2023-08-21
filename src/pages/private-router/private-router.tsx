@@ -1,12 +1,8 @@
 import { Outlet, Navigate } from "react-router-dom";
 
 const checkToken = () => {
-  /**
-   * TODO logic
-   * const accessToken = localStorage.getItem('access_token');
-   *   return !!accessToken;
-   */
-  return true;
+  const token = localStorage.getItem("tokenObject");
+  return token !== null;
 };
 
 const PrivateRoute = () => {

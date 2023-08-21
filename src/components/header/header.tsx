@@ -1,49 +1,21 @@
 import React from "react";
 
-import { Link, useLocation } from "react-router-dom";
+import HeaderBurger from "@components/header/header-burger";
+import HeaderDesktop from "@components/header/header-desktop";
 
-import { Box, Tab, Tabs } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import tabs from "./tabs";
+import styles from "./header.module.scss";
 
 const AppHeader = () => {
-  const location = useLocation();
-  const processPathName = () => {
-    const path = `/${location.pathname.split("/")[1]}`;
-    const tab = tabs.find((t) => t.link === path);
-    return tab ? tab.index : 1;
-  };
-  const [index, setIndex] = React.useState(processPathName());
-
-  /**
-   * set active header tab
-   */
-  const handleChange = (event: React.SyntheticEvent, newIndex: number) =>
-    setIndex(newIndex);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <header className="header">
-      <Box
-        sx={{
-          mb: 2,
-          width: "95%",
-        }}
-      >
-        <Tabs value={index} onChange={handleChange} variant="fullWidth">
-          {tabs.map((tab) => (
-            <Tab
-              value={tab.index}
-              key={tab.index}
-              icon={tab.icon}
-              label={tab.label}
-              to={tab.link}
-              component={Link}
-            />
-          ))}
-        </Tabs>
-      </Box>
+    <header className={styles.header}>
+      {isMobile ? <HeaderBurger /> : <HeaderDesktop />}
     </header>
   );
 };
-
 export default AppHeader;

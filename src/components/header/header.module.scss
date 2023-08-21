@@ -1,0 +1,10 @@
+.header {
+  margin: 30px;
+}
+.link {
+  text-decoration: none;
+  margin-left: 30px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
