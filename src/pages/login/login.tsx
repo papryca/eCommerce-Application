@@ -9,7 +9,7 @@ import AppHeader from "@components/header/header";
 import { ILoginData } from "@interfaces/login-form-data";
 
 import { getTokenAndLogin } from "@services/authentication-service";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -21,6 +21,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Typography,
 } from "@mui/material";
 
 import schemaLogin from "./schema-login";
@@ -29,6 +30,7 @@ import styles from "./login.module.scss";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const hasToken = localStorage.getItem("tokenObject");
 
   // State to toggle password visibility
   const [showPassword, setShowPassword] = useState(false);
@@ -73,6 +75,10 @@ const Login: React.FC = () => {
       }
     }
   };
+
+  if (hasToken) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>
@@ -132,6 +138,12 @@ const Login: React.FC = () => {
             Login
           </Button>
         </form>
+        <Typography className={styles.title} variant="h6">
+          I’m new here{" "}
+          <Link className={styles.link} to="/registration">
+            Register
+          </Link>
+        </Typography>
       </Box>
     </>
   );
