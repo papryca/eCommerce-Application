@@ -7,3 +7,4 @@ webpack.dev.config
 webpack.prod.config
 webpack.*.js
 .eslintrc.js
+craco.config.js

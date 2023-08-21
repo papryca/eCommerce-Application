@@ -1,0 +1,27 @@
+@import "../../sass/abstract/constants";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form {
+  width: 30%;
+  min-width: 362px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.title {
+  text-align: center;
+}
+
+.link {
+  color: $color-primary;
+  text-decoration: none;
+}
