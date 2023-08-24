@@ -1,12 +1,25 @@
 import emailValidation from "@constants/email-validation";
+import validationErrors from "@constants/validation-errors";
 import * as yup from "yup";
 
 // Schema for validation of Registration Form
 const schemaRegister = yup.object({
   email: yup
     .string()
-    .required("This field is required")
-    .matches(emailValidation, "Invalid email format"),
+    .required(validationErrors.required())
+    .test(
+      "noWhitespace",
+      validationErrors.noWhitespace(),
+      (value) => !value.includes(" ")
+    )
+    .test("hasAtSymbol", validationErrors.missingAtSymbol(), (value) =>
+      value.includes("@")
+    )
+    .test("hasDomain", validationErrors.missingDomain(), (value) => {
+      const emailParts = value.split("@");
+      return emailParts.length === 2 && emailParts[1].trim() !== "";
+    })
+    .matches(emailValidation, validationErrors.invalidEmailFormat()),
   password: yup
     .string()
     .required("This field is required")

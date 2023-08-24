@@ -7,7 +7,19 @@ const schemaLogin = yup.object({
   email: yup
     .string()
     .required(validationErrors.required())
-    .matches(emailValidation, validationErrors.invalidFormat()),
+    .test(
+      "noWhitespace",
+      validationErrors.noWhitespace(),
+      (value) => !value.includes(" ")
+    )
+    .test("hasAtSymbol", validationErrors.missingAtSymbol(), (value) =>
+      value.includes("@")
+    )
+    .test("hasDomain", validationErrors.missingDomain(), (value) => {
+      const emailParts = value.split("@");
+      return emailParts.length === 2 && emailParts[1].trim() !== "";
+    })
+    .matches(emailValidation, validationErrors.invalidEmailFormat()),
   password: yup
     .string()
     .required(validationErrors.required())
