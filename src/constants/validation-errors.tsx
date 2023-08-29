@@ -11,6 +11,11 @@ const validationErrors = {
   noWhitespace: () =>
     "This field must not contain leading or trailing whitespace",
   invalidFormat: () => "Invalid format",
+  missingDomain: () =>
+    "Email address must contain a domain name (e.g., example.com)",
+  missingAtSymbol: () => "Email address must contain an '@' symbol",
+  invalidEmailFormat: () =>
+    "Email address must be properly formatted (e.g., user@example.com)",
 };
 
 export default validationErrors;

@@ -1,12 +1,25 @@
 import emailValidation from "@constants/email-validation";
+import validationErrors from "@constants/validation-errors";
 import * as yup from "yup";
 
 // Schema for validation of Registration Form
 const schemaRegister = yup.object({
   email: yup
     .string()
-    .required("This field is required")
-    .matches(emailValidation, "Invalid email format"),
+    .required(validationErrors.required())
+    .test(
+      "noWhitespace",
+      validationErrors.noWhitespace(),
+      (value) => !value.includes(" ")
+    )
+    .test("hasAtSymbol", validationErrors.missingAtSymbol(), (value) =>
+      value.includes("@")
+    )
+    .test("hasDomain", validationErrors.missingDomain(), (value) => {
+      const emailParts = value.split("@");
+      return emailParts.length === 2 && emailParts[1].trim() !== "";
+    })
+    .matches(emailValidation, validationErrors.invalidEmailFormat()),
   password: yup
     .string()
     .required("This field is required")
@@ -50,9 +63,20 @@ const schemaRegister = yup.object({
     .test("date-test", "You must be at least 13 years old", (value) => {
       const today = new Date();
       const userDate = new Date(value);
-      const dataDelta = today.getTime() - userDate.getTime();
-      const minAge13 = 410240038000;
-      return dataDelta >= minAge13;
+      const userYear = userDate.getFullYear();
+      const userMonth = userDate.getMonth();
+      const userDay = userDate.getDate();
+
+      const age = today.getFullYear() - userYear;
+
+      if (
+        today.getMonth() < userMonth ||
+        (today.getMonth() === userMonth && today.getDate() < userDay)
+      ) {
+        return age - 1 >= 13;
+      }
+
+      return age >= 13;
     }),
   shippingStreet: yup
     .string()
@@ -63,7 +87,7 @@ const schemaRegister = yup.object({
     .required("This field is required")
     .min(1, "Must contain at least one character")
     .matches(
-      /^[A-Za-z]+(?:-[A-Za-z]+)*$/,
+      /^[A-Za-z\s]+(?:-[A-Za-z\s]+)*$/,
       "City must contain only letters (may be devided by hyphen)"
     ),
   shippingCountry: yup.string().required("This field is required"),
@@ -107,7 +131,10 @@ const schemaRegister = yup.object({
     .string()
     .required("This field is required")
     .min(1, "Must contain at least one character")
-    .matches(/^[A-Za-z]+(?:-[A-Za-z]+)*$/, "City must contain only letters"),
+    .matches(
+      /^[A-Za-z\s]+(?:-[A-Za-z\s]+)*$/,
+      "City must contain only letters"
+    ),
   billingCountry: yup.string().required("This field is required"),
   billingPostcode: yup
     .string()

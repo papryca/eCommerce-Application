@@ -10,7 +10,6 @@ import { ITokenResponse } from "@interfaces/token-response";
 
 //  get an access token from the CommerceTools
 export const getAccessToken = async () => {
-  // Note: clientId, clientSecret taken from "API The Reactonauts" not from "E-commerce App API"
   const authHost = process.env.REACT_APP_AUTH_HOST;
   const clientId = process.env.REACT_APP_CLIENT_ID;
   const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
@@ -28,8 +27,6 @@ export const getAccessToken = async () => {
       { headers }
     );
 
-    localStorage.setItem("tokenObject", JSON.stringify(response.data));
-
     return response.data;
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -43,7 +40,6 @@ export const getAccessTokenPassFlow = async (
   email: string,
   password: string
 ) => {
-  // Note: clientId, clientSecret taken from "API The Reactonauts" not from "E-commerce App API"
   const authHost = process.env.REACT_APP_AUTH_HOST;
   const clientId = process.env.REACT_APP_CLIENT_ID;
   const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
@@ -135,7 +131,10 @@ const registrateCustomer = async (
 
 export const getTokenAndRegistrate = async (user: IRegistrateData) => {
   const tokenObject: ITokenResponse = await getAccessToken();
-  localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
+  const customerInfo = await registrateCustomer(tokenObject.access_token, user);
+  if (customerInfo) {
+    localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
+  }
 
-  return registrateCustomer(tokenObject.access_token, user);
+  return customerInfo;
 };

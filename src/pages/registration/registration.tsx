@@ -177,11 +177,14 @@ const Registration: React.FC = () => {
               message: "Choose another email",
             });
           }
+          // localStorage.removeItem("tokenObject");
           return;
         }
       } else {
         console.log("Error:", error);
       }
+
+      return;
     }
 
     console.log("Customer registrated successfully", customerInfo);
