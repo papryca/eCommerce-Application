@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 
 import AppHeader from "@components/header/header";
@@ -6,14 +7,16 @@ import { IProductResponse } from "@interfaces/product-response";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
 
-import { ImageList, ImageListItem } from "@mui/material";
+import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
+import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
+import { Modal, ImageList, ImageListItem } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 
-import styles from "./products.module.scss";
+import styles from "./modal.module.scss";
 
 const ProductInformation = () => {
   const { id } = useParams();
@@ -29,6 +32,23 @@ const ProductInformation = () => {
 
   // State to track when get error
   const [requestError, setError] = useState<boolean>(false);
+
+  // State to track when the modal is open
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  // State to track current slide index
+  const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
+
+  // Function to open the modal and set the current slide index
+  const openModal = (index: number) => {
+    setCurrentSlideIndex(index);
+    setModalOpen(true);
+  };
+
+  // Function to close the modal
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   // Fetch product data when the component mounts
   useEffect(() => {
@@ -50,19 +70,56 @@ const ProductInformation = () => {
   const toggleDescription = () => {
     setDescription(!isDescription);
   };
+
+  // Function to switch to the next slide
+  const nextSlide = () => {
+    if (product) {
+      setCurrentSlideIndex(
+        (prevIndex) =>
+          (prevIndex + 1) %
+          product.masterData.current.masterVariant.images.length
+      );
+    }
+  };
+
+  // Function to switch to the previous slide
+  const prevSlide = () => {
+    setCurrentSlideIndex((index) => {
+      if (product) {
+        return index === 0
+          ? product.masterData.current.masterVariant.images.length - 1
+          : index - 1;
+      }
+      return index;
+    });
+  };
+
+  // Add keyboard navigation within the modal
+  useEffect(() => {
+    const handleKeyDown = (event: { key: string }) => {
+      if (isModalOpen) {
+        if (event.key === "ArrowLeft") {
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          prevSlide();
+        } else if (event.key === "ArrowRight") {
+          nextSlide();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isModalOpen]);
+
   return (
     <div>
       <AppHeader />
       {/* eslint-disable-next-line no-nested-ternary */}
       {isLoading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
+        <Box className={styles.spinner}>
           <CircularProgress />
         </Box>
       ) : // eslint-disable-next-line no-nested-ternary
@@ -71,26 +128,22 @@ const ProductInformation = () => {
       ) : product ? (
         <div className={styles.article}>
           <Box className={styles.product}>
-            <ImageList
-              sx={{
-                width: 700,
-                height: 550,
-                transform: "translateZ(0)",
-              }}
-              rowHeight={200}
-              gap={1}
-            >
+            <ImageList className={styles.imageList} rowHeight={200} gap={1}>
               {product.masterData.current.masterVariant.images.map(
                 (image, index) => {
                   const rowHeight = index === 0 ? 400 : 200;
                   const cols = index === 0 ? 2 : 1;
                   const rows = index === 0 ? 2 : 1;
                   return (
-                    <ImageListItem key={image.url} cols={cols} rows={rows}>
+                    <ImageListItem
+                      cols={cols}
+                      rows={rows}
+                      onClick={() => openModal(index)}
+                    >
                       {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                       <img
                         src={image.url}
-                        alt="Product Image"
+                        alt="product image"
                         loading="lazy"
                         style={{ height: rowHeight }}
                       />
@@ -105,13 +158,7 @@ const ProductInformation = () => {
                   {product.masterData.current.name["en-US"]}
                 </Typography>
               </div>
-              <div
-                style={{
-                  marginTop: "26px",
-                  maxWidth: "600px",
-                  overflow: "hidden",
-                }}
-              >
+              <div className={styles.title}>
                 <Typography variant="body1">
                   {isDescription
                     ? product.masterData.current.description["en-US"]
@@ -139,6 +186,32 @@ const ProductInformation = () => {
               </div>
             </div>
           </Box>
+          <Modal
+            open={isModalOpen}
+            onClose={closeModal}
+            className={styles.modal}
+          >
+            <div>
+              <ArrowBackIosNewTwoToneIcon
+                className={styles.arrowLeft}
+                onClick={prevSlide}
+              />
+              {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+              <img
+                className={styles.image}
+                src={
+                  product.masterData.current.masterVariant.images[
+                    currentSlideIndex
+                  ].url
+                }
+                alt="product image"
+              />
+              <ArrowForwardIosTwoToneIcon
+                className={styles.arrowRight}
+                onClick={nextSlide}
+              />
+            </div>
+          </Modal>
         </div>
       ) : (
         <div>No product data available</div>

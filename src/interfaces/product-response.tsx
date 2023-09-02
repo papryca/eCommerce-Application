@@ -2,7 +2,7 @@ interface IMasterData {
   current: IProductData;
 }
 
-interface IImage {
+export interface IImage {
   url: string;
 }
 interface IPrice {
