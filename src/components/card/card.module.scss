@@ -25,6 +25,7 @@
   align-items: center;
   justify-content: space-between;
   flex: 1 auto;
+  gap: 5px;
 }
 
 .originalPrice {
@@ -74,4 +75,10 @@
 .cardAction,
 .button {
   width: 100%;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }

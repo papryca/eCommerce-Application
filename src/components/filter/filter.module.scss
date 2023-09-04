@@ -1,0 +1,19 @@
+.filterContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.slider {
+  width: 200px;
+}
+
+.buttonsContainer {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  width: 100%;
+}

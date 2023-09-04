@@ -22,45 +22,30 @@ const schemaRegister = yup.object({
     .matches(emailValidation, validationErrors.invalidEmailFormat()),
   password: yup
     .string()
-    .required("This field is required")
-    .matches(
-      /[A-Z]/,
-      "Password must contain at least one uppercase letter (A-Z)"
-    )
-    .matches(
-      /[a-z]/,
-      "Password must contain at least one lowercase letter (a-z)"
-    )
-    .matches(/\d/, "Password must contain at least one digit (0-9)")
-    .matches(
-      /[!@#$%^&*]/,
-      "Password must contain at least one special character (!@#$%^&*)"
-    )
+    .required(validationErrors.required())
+    .matches(/[A-Z]/, validationErrors.uppercase())
+    .matches(/[a-z]/, validationErrors.lowercase())
+    .matches(/\d/, validationErrors.digit())
+    .matches(/[!@#$%^&*]/, validationErrors.specialChar())
     .test(
       "noWhitespace",
-      "Password must not contain leading or trailing whitespace",
+      validationErrors.noWhitespace(),
       (value) => !value.includes(" ")
     )
-    .min(8, "Must be more than 8 characters"),
+    .min(8, validationErrors.min(8)),
   firstName: yup
     .string()
-    .required("This field is required")
-    .matches(
-      /^[A-Za-z]+(?:-[A-Za-z]+)*$/,
-      "First name must contain only letters (may be devided by hyphen)"
-    ),
+    .required(validationErrors.required())
+    .matches(/^[A-Za-z]+(?:-[A-Za-z]+)*$/, validationErrors.onlyLetters()),
   lastName: yup
     .string()
-    .required("This field is required")
-    .matches(
-      /^[A-Za-z]+(?:-[A-Za-z]+)*$/,
-      "Last name must contain only letters (may be devided by hyphen)"
-    ),
+    .required(validationErrors.required())
+    .matches(/^[A-Za-z]+(?:-[A-Za-z]+)*$/, validationErrors.onlyLetters()),
   birthday: yup
     .date()
-    .typeError("Date is required")
-    .required("This field is required")
-    .test("date-test", "You must be at least 13 years old", (value) => {
+    .typeError(validationErrors.dateRequired())
+    .required(validationErrors.required())
+    .test("date-test", validationErrors.ageRestriction(), (value) => {
       const today = new Date();
       const userDate = new Date(value);
       const userYear = userDate.getFullYear();
@@ -80,20 +65,17 @@ const schemaRegister = yup.object({
     }),
   shippingStreet: yup
     .string()
-    .required("This field is required")
-    .min(1, "Street must contain at least one character"),
+    .required(validationErrors.required())
+    .min(1, validationErrors.min(1)),
   shippingCity: yup
     .string()
-    .required("This field is required")
-    .min(1, "Must contain at least one character")
-    .matches(
-      /^[A-Za-z\s]+(?:-[A-Za-z\s]+)*$/,
-      "City must contain only letters (may be devided by hyphen)"
-    ),
-  shippingCountry: yup.string().required("This field is required"),
+    .required(validationErrors.required())
+    .min(1, validationErrors.min(1))
+    .matches(/^[A-Za-z\s]+(?:-[A-Za-z\s]+)*$/, validationErrors.onlyLetters()),
+  shippingCountry: yup.string().required(validationErrors.required()),
   shippingPostcode: yup
     .string()
-    .required("This field is required")
+    .required(validationErrors.required())
     .test("postcode-test", (value, validationContext) => {
       const {
         createError,
@@ -101,11 +83,11 @@ const schemaRegister = yup.object({
       } = validationContext;
 
       if (shippingCountry === "AT" && !value.match(/^[0-9]{4,4}$/)) {
-        return createError({ message: "Postcode must contain 4 digits" });
+        return createError({ message: validationErrors.postcodeFormat("AT") });
       }
 
       if (shippingCountry === "BY" && !value.match(/^[0-9]{6,6}$/)) {
-        return createError({ message: "Postcode must contain 6 digits" });
+        return createError({ message: validationErrors.postcodeFormat("BY") });
       }
 
       if (
@@ -113,32 +95,29 @@ const schemaRegister = yup.object({
         !value.match(/^([0-9]{2,2})-([0-9]{3,3})$/)
       ) {
         return createError({
-          message: "Postcode must contain only digits in format xx-xxx",
+          message: validationErrors.postcodeFormat("PL"),
         });
       }
 
       if (shippingCountry === "US" && !value.match(/^[0-9]{5,5}$/)) {
-        return createError({ message: "Postcode must contain 5 digits" });
+        return createError({ message: validationErrors.postcodeFormat("US") });
       }
 
       return true;
     }),
   billingStreet: yup
     .string()
-    .required("This field is required")
-    .min(1, "Street must contain at least one character"),
+    .required(validationErrors.required())
+    .min(1, validationErrors.min(1)),
   billingCity: yup
     .string()
-    .required("This field is required")
-    .min(1, "Must contain at least one character")
-    .matches(
-      /^[A-Za-z\s]+(?:-[A-Za-z\s]+)*$/,
-      "City must contain only letters"
-    ),
-  billingCountry: yup.string().required("This field is required"),
+    .required(validationErrors.required())
+    .min(1, validationErrors.min(1))
+    .matches(/^[A-Za-z\s]+(?:-[A-Za-z\s]+)*$/, validationErrors.onlyLetters()),
+  billingCountry: yup.string().required(validationErrors.required()),
   billingPostcode: yup
     .string()
-    .required("This field is required")
+    .required(validationErrors.required())
     .test("postcode-test", (value, validationContext) => {
       const {
         createError,
@@ -146,11 +125,11 @@ const schemaRegister = yup.object({
       } = validationContext;
 
       if (billingCountry === "AT" && !value.match(/^[0-9]{4,4}$/)) {
-        return createError({ message: "Postcode must contain 4 digits" });
+        return createError({ message: validationErrors.postcodeFormat("AT") });
       }
 
       if (billingCountry === "BY" && !value.match(/^[0-9]{6,6}$/)) {
-        return createError({ message: "Postcode must contain 6 digits" });
+        return createError({ message: validationErrors.postcodeFormat("BY") });
       }
 
       if (
@@ -158,12 +137,12 @@ const schemaRegister = yup.object({
         !value.match(/^([0-9]{2,2})-([0-9]{3,3})$/)
       ) {
         return createError({
-          message: "Postcode must contain only digits in format xx-xxx",
+          message: validationErrors.postcodeFormat("PL"),
         });
       }
 
       if (billingCountry === "US" && !value.match(/^[0-9]{5,5}$/)) {
-        return createError({ message: "Postcode must contain 5 digits" });
+        return createError({ message: validationErrors.postcodeFormat("US") });
       }
 
       return true;

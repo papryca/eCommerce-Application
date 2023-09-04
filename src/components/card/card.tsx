@@ -3,7 +3,9 @@ import React from "react";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
-import { ICardProps } from "@interfaces/card-props";
+
+import { IProductData } from "@interfaces/product-data";
+import { IProductSearchResult } from "@interfaces/product-search-result";
 import { Link } from "react-router-dom";
 
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -15,23 +17,49 @@ import {
   CardActions,
   Button,
   Card,
+  Rating,
+  Box,
 } from "@mui/material";
 
 import styles from "./card.module.scss";
 
-const CardComponent: React.FC<ICardProps> = ({ product }) => {
-  const originalPrice =
-    product.masterData.current.masterVariant.prices[0].value.centAmount;
-  const discountPrice =
-    product.masterData.current.masterVariant.prices[0].discounted?.value
-      .centAmount;
+const CardComponent: React.FC<{
+  product: IProductData | IProductSearchResult;
+}> = ({ product }) => {
+  // check needed to use appropriate interface
+  const isProductData = "masterData" in product;
 
+  const originalPrice = isProductData
+    ? product.masterData.current.masterVariant.prices[0].value.centAmount
+    : product.masterVariant.prices[0].value.centAmount;
+  const discountPrice = isProductData
+    ? product.masterData.current.masterVariant.prices[0].discounted?.value
+        .centAmount
+    : product.masterVariant.prices[0].discounted?.value.centAmount;
+
+  // calculate discount
   const discountPercentage = calculateDiscount(originalPrice, discountPrice);
 
-  const briefDescription = sliceText(
-    product.masterData.current.description["en-US"],
-    150
-  );
+  // trim the discription of product
+  const briefDescription = isProductData
+    ? sliceText(product.masterData.current.description["en-US"], 150)
+    : sliceText(product.description["en-US"], 150);
+
+  const imageUrl = isProductData
+    ? product.masterData.current.masterVariant.images[0].url
+    : product.masterVariant.images[0].url;
+
+  const productName = isProductData
+    ? product.masterData.current.name["en-US"]
+    : product.name["en-US"];
+
+  const starRating = isProductData
+    ? product.masterData.current.masterVariant.attributes.find(
+        (attribute) => attribute.name === "Star-Rating"
+      )?.value
+    : product.masterVariant.attributes.find(
+        (attribute) => attribute.name === "Star-Rating"
+      )?.value;
 
   return (
     <Card className={styles.card}>
@@ -49,28 +77,23 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
         height="250"
         component="img"
         className={styles.image}
-        image={product.masterData.current.masterVariant.images[0].url}
-        alt={product.masterData.current.name["en-US"]}
+        image={imageUrl}
+        alt={productName}
       />
       <CardContent className={styles.content}>
-        <Typography variant="h6">
-          {product.masterData.current.name["en-US"]}
-        </Typography>
+        <Typography variant="h6">{productName}</Typography>
+        <Box className={styles.rating}>
+          <Box className={styles.ratingText}>Hotel class:</Box>
+          <Rating name="star-rating" value={Number(starRating)} readOnly />
+        </Box>
         <Typography variant="body2">{briefDescription}</Typography>
-        {product.masterData.current.masterVariant.prices[0].discounted
-          ?.value ? (
+        {discountPrice ? (
           <>
             <Typography className={styles.originalPriceStriked}>
-              Price:{" "}
-              {product.masterData.current.masterVariant.prices[0].value
-                .centAmount / 100}{" "}
-              USD
+              Price: {(originalPrice / 100).toFixed()} USD
             </Typography>
             <Typography className={styles.discountedPrice}>
-              Discounted Price:{" "}
-              {product.masterData.current.masterVariant.prices[0].discounted
-                .value.centAmount / 100}{" "}
-              USD
+              Discounted Price: {(discountPrice / 100).toFixed()} USD
             </Typography>
             <Chip
               component="span"
@@ -82,10 +105,7 @@ const CardComponent: React.FC<ICardProps> = ({ product }) => {
           </>
         ) : (
           <Typography className={styles.originalPrice}>
-            Price:{" "}
-            {product.masterData.current.masterVariant.prices[0].value
-              .centAmount / 100}{" "}
-            USD
+            Price: {(originalPrice / 100).toFixed()} USD
           </Typography>
         )}
         <CardActions className={styles.cardAction}>
