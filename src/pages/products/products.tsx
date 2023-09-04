@@ -4,17 +4,22 @@ import React, { useEffect, useState } from "react";
 import AppHeader from "@components/header/header";
 import { IProductResponse } from "@interfaces/product-response";
 
+import ProductEstimation from "@pages/products/product-estimation";
 import getProductById from "@services/get-product-by-id";
 import { Navigate, useParams } from "react-router-dom";
 
 import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTone";
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { Modal, ImageList, ImageListItem } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 import styles from "./modal.module.scss";
 
@@ -114,6 +119,9 @@ const ProductInformation = () => {
     };
   }, [isModalOpen]);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
     <div>
       <AppHeader />
@@ -127,8 +135,37 @@ const ProductInformation = () => {
         <Navigate to="*" />
       ) : product ? (
         <div className={styles.article}>
-          <Box className={styles.product}>
-            <ImageList className={styles.imageList} rowHeight={200} gap={1}>
+          <Box
+            className={styles.product}
+            style={isMobile ? { flexDirection: "column" } : {}}
+          >
+            <div>
+              <div>
+                <Typography variant="h4" gutterBottom>
+                  {product.masterData.current.name["en-US"]}
+                </Typography>
+              </div>
+              <div className={styles.title}>
+                <Typography variant="body1">
+                  {isDescription
+                    ? product.masterData.current.description["en-US"]
+                    : `${product.masterData.current.description["en-US"].slice(
+                        0,
+                        600
+                      )}...`}
+                </Typography>
+                <Button onClick={toggleDescription}>
+                  {isDescription ? "Read Less" : "Show More"}
+                </Button>
+              </div>
+              <ProductEstimation product={product} />
+            </div>
+            <ImageList
+              className={styles.imageList}
+              style={isMobile ? { width: "100%" } : {}}
+              rowHeight={200}
+              gap={1}
+            >
               {product.masterData.current.masterVariant.images.map(
                 (image, index) => {
                   const rowHeight = index === 0 ? 400 : 200;
@@ -152,39 +189,6 @@ const ProductInformation = () => {
                 }
               )}
             </ImageList>
-            <div>
-              <div>
-                <Typography variant="h4" gutterBottom>
-                  {product.masterData.current.name["en-US"]}
-                </Typography>
-              </div>
-              <div className={styles.title}>
-                <Typography variant="body1">
-                  {isDescription
-                    ? product.masterData.current.description["en-US"]
-                    : `${product.masterData.current.description["en-US"].slice(
-                        0,
-                        600
-                      )}...`}
-                </Typography>
-                <Button onClick={toggleDescription}>
-                  {isDescription ? "Read Less" : "Show More"}
-                </Button>
-              </div>
-              <div className={styles.price}>
-                <Typography variant="h4">
-                  $
-                  {(
-                    parseFloat(
-                      String(
-                        product.masterData.current.masterVariant.prices[0].value
-                          .centAmount
-                      )
-                    ) / 100
-                  ).toFixed(2)}
-                </Typography>
-              </div>
-            </div>
           </Box>
           <Modal
             open={isModalOpen}
@@ -192,24 +196,34 @@ const ProductInformation = () => {
             className={styles.modal}
           >
             <div>
-              <ArrowBackIosNewTwoToneIcon
-                className={styles.arrowLeft}
-                onClick={prevSlide}
-              />
-              {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-              <img
-                className={styles.image}
-                src={
-                  product.masterData.current.masterVariant.images[
-                    currentSlideIndex
-                  ].url
-                }
-                alt="product image"
-              />
-              <ArrowForwardIosTwoToneIcon
-                className={styles.arrowRight}
-                onClick={nextSlide}
-              />
+              <div className={styles.cross}>
+                <CancelOutlinedIcon
+                  fontSize="large"
+                  className={styles.close}
+                  onClick={closeModal}
+                />
+              </div>
+
+              <div className={styles.arrows}>
+                <ArrowBackIosNewTwoToneIcon
+                  className={styles.arrowLeft}
+                  onClick={prevSlide}
+                />
+                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
+                <img
+                  className={styles.image}
+                  src={
+                    product.masterData.current.masterVariant.images[
+                      currentSlideIndex
+                    ].url
+                  }
+                  alt="product image"
+                />
+                <ArrowForwardIosTwoToneIcon
+                  className={styles.arrowRight}
+                  onClick={nextSlide}
+                />
+              </div>
             </div>
           </Modal>
         </div>
