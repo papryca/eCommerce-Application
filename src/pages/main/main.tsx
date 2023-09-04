@@ -14,6 +14,7 @@ const Home = () => {
     routes.cart,
     routes.login,
     routes.registration,
+    routes.profile,
   ];
 
   return (

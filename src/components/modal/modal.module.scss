@@ -1,0 +1,50 @@
+@import "../../sass/abstract/constants";
+
+* {
+  box-sizing: border-box;
+}
+
+.modal {
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 385px;
+  padding: 20px 24px;
+  transform: translate(-50%, -50%);
+  background-color: aliceblue;
+  border: 1.5px solid $color-secondary;
+  border-radius: 10px;
+  font-family: "Roboto";
+}
+
+.passModal {
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 385px;
+  padding: 25px 10px 15px 10px;
+  transform: translate(-50%, -50%);
+  background-color: aliceblue;
+  border: 1.5px solid $color-secondary;
+  border-radius: 10px;
+  font-family: "Roboto";
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.passButton {
+  width: 40%;
+}

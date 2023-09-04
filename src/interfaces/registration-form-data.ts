@@ -15,10 +15,11 @@ export interface IRegisterFormData {
 }
 
 export interface IBaseAddress {
+  id?: string;
   country: string;
-  streetName?: string;
-  postalCode?: string;
-  city?: string;
+  streetName: string;
+  postalCode: string;
+  city: string;
 }
 
 export interface IRegistrateData {

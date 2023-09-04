@@ -58,11 +58,18 @@ const HeaderBurger = () => {
             label={routes.cart.label}
           />
           {hasToken ? (
-            <HeaderRoute
-              to={routes.logout.link}
-              icon={routes.logout.icon}
-              label={routes.logout.label}
-            />
+            <>
+              <HeaderRoute
+                to={routes.profile.link}
+                icon={routes.profile.icon}
+                label={routes.profile.label}
+              />
+              <HeaderRoute
+                to={routes.logout.link}
+                icon={routes.logout.icon}
+                label={routes.logout.label}
+              />
+            </>
           ) : (
             <>
               <HeaderRoute

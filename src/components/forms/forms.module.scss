@@ -1,0 +1,56 @@
+@import "../../sass/abstract/constants";
+
+* {
+  box-sizing: border-box;
+}
+
+.button-container {
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+
+.form {
+  width: 50%;
+  min-width: 358px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.default,
+.basic {
+  width: 100%;
+  min-width: 358px;
+  margin-bottom: 15px;
+  padding: 0 3px 10px 3px;
+  border: 1px solid $color-primary;
+  border-radius: 5px;
+}
+
+.default {
+  border: 2px solid $color-default-address;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0 0 15px 0;
+  padding: 0;
+}
+
+.h4default,
+.h4basic {
+  padding: 10px 0;
+}
+
+.h4default {
+  color: $color-default-address;
+}
+
+.summary {
+  width: 100%;
+  min-width: 390px;
+}

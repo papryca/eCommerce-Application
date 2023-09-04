@@ -81,7 +81,9 @@ const CardComponent: React.FC<{
         alt={productName}
       />
       <CardContent className={styles.content}>
-        <Typography variant="h6">{productName}</Typography>
+        <Typography variant="h6" color="secondary">
+          {productName}
+        </Typography>
         <Box className={styles.rating}>
           <Box className={styles.ratingText}>Hotel class:</Box>
           <Rating name="star-rating" value={Number(starRating)} readOnly />

@@ -138,7 +138,7 @@ const Login: React.FC = () => {
             Login
           </Button>
         </form>
-        <Typography className={styles.title} variant="h6">
+        <Typography className={styles.title} variant="h6" color="secondary">
           I’m new here{" "}
           <Link className={styles.link} to="/registration">
             Register

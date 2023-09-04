@@ -11,31 +11,29 @@ const convertFormDataToRegistrateData = (
   billingChecked: boolean,
   shippingChecked: boolean
 ): IRegistrateData => {
-  const billingAdress: IBaseAddress | null = oneAddressChecked
-    ? null
-    : {
-        country: data.billingCountry,
-        streetName: data.billingStreet,
-        postalCode: data.billingPostcode,
-        city: data.billingCity,
-      };
   const shippingAdress: IBaseAddress = {
     country: data.shippingCountry,
     streetName: data.shippingStreet,
     postalCode: data.shippingPostcode,
     city: data.shippingCity,
   };
+  const billingAdress: IBaseAddress = oneAddressChecked
+    ? shippingAdress
+    : {
+        country: data.billingCountry,
+        streetName: data.billingStreet,
+        postalCode: data.billingPostcode,
+        city: data.billingCity,
+      };
   const user: IRegistrateData = {
     email: data.email,
     password: data.password,
     firstName: data.firstName,
     lastName: data.lastName,
     dateOfBirth: dayjs(data.birthday).format("YYYY-MM-DD"),
-    addresses: billingAdress
-      ? [billingAdress, shippingAdress]
-      : [shippingAdress],
+    addresses: [billingAdress, shippingAdress],
     billingAddresses: [0],
-    shippingAddresses: oneAddressChecked ? [0] : [1],
+    shippingAddresses: [1],
   };
 
   if (billingChecked) {
@@ -43,7 +41,7 @@ const convertFormDataToRegistrateData = (
   }
 
   if (shippingChecked) {
-    user.defaultShippingAddress = oneAddressChecked ? 0 : 1;
+    user.defaultShippingAddress = 1;
   }
 
   return user;
