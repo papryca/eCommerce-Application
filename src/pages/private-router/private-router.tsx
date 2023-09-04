@@ -1,11 +1,11 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
-const checkToken = () => {
+export const checkToken = () => {
   const token = localStorage.getItem("tokenObject");
   return token !== null;
 };
 
-const PrivateRoute = () => {
-  return checkToken() ? <Outlet /> : <Navigate to="/login" />;
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+  return checkToken() ? children : <Navigate to="/login" />;
 };
 export default PrivateRoute;

@@ -1,5 +1,6 @@
 import React from "react";
 
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CottageTwoToneIcon from "@mui/icons-material/CottageTwoTone";
 import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
@@ -52,6 +53,12 @@ const routes: RouteDictionary = {
     icon: <ShoppingCartOutlinedIcon />,
     label: "CART",
     link: "/cart",
+  },
+  profile: {
+    index: 7,
+    icon: <AccountCircleIcon />,
+    label: "PROFILE",
+    link: "/profile",
   },
 };
 

@@ -38,7 +38,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import countries from "./countries";
+import countries from "../../constants/countries";
 
 import schemaRegister from "./schema-register";
 
@@ -116,12 +116,29 @@ const Registration: React.FC = () => {
       newBilingAdress.city = watch("shippingCity");
       newBilingAdress.country = watch("shippingCountry");
       newBilingAdress.code = watch("shippingPostcode");
-    }
 
-    setValue("billingStreet", newBilingAdress.street);
-    setValue("billingCity", newBilingAdress.city);
-    setValue("billingCountry", newBilingAdress.country);
-    setValue("billingPostcode", newBilingAdress.code);
+      if (
+        newBilingAdress.street.length !== 0 &&
+        newBilingAdress.city.length !== 0 &&
+        newBilingAdress.country.length !== 0 &&
+        newBilingAdress.code.length !== 0
+      ) {
+        setValue("billingStreet", newBilingAdress.street);
+        setValue("billingCity", newBilingAdress.city);
+        setValue("billingCountry", newBilingAdress.country);
+        setValue("billingPostcode", newBilingAdress.code);
+      } else {
+        setValue("billingStreet", "street");
+        setValue("billingCity", "city");
+        setValue("billingCountry", "AT");
+        setValue("billingPostcode", "1111");
+      }
+    } else {
+      setValue("billingStreet", "");
+      setValue("billingCity", "");
+      setValue("billingCountry", "");
+      setValue("billingPostcode", "");
+    }
   };
 
   const login = async (data: ILoginData) => {
@@ -157,10 +174,9 @@ const Registration: React.FC = () => {
       billingChecked,
       shippingChecked
     );
-    let customerInfo;
 
     try {
-      customerInfo = await getTokenAndRegistrate(user);
+      await getTokenAndRegistrate(user);
     } catch (error) {
       // Handle error messages from response
       if (axios.isAxiosError(error)) {
@@ -177,7 +193,6 @@ const Registration: React.FC = () => {
               message: "Choose another email",
             });
           }
-          // localStorage.removeItem("tokenObject");
           return;
         }
       } else {
@@ -187,7 +202,6 @@ const Registration: React.FC = () => {
       return;
     }
 
-    console.log("Customer registrated successfully", customerInfo);
     setCredentials({
       email: data.email,
       password: data.password,
@@ -200,7 +214,7 @@ const Registration: React.FC = () => {
       <AppHeader />
       <Box sx={{ display: "flex" }} className={styles.container}>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Login data
           </Typography>
           <Controller
@@ -245,7 +259,7 @@ const Registration: React.FC = () => {
               />
             )}
           />
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Personal data
           </Typography>
           <Controller
@@ -305,10 +319,11 @@ const Registration: React.FC = () => {
               );
             }}
           />
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Shipping address
           </Typography>
           <FormControlLabel
+            name="shippingChecked"
             control={
               <Checkbox
                 checked={shippingChecked}
@@ -407,7 +422,7 @@ const Registration: React.FC = () => {
               />
             )}
           />
-          <Typography variant="h6" color="primary">
+          <Typography variant="h6" color="secondary">
             Billing address
           </Typography>
           <FormControlLabel
