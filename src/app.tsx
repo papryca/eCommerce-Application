@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
+import theme from "@constants/theme";
 import { ITokenResponse } from "@interfaces/token-response";
 import { getAccessToken } from "@services/authentication-service";
-import theme from "@constants/theme";
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
