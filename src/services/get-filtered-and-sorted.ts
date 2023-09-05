@@ -3,16 +3,21 @@ import axios, { AxiosError } from "axios";
 
 import { IQueryParams } from "@interfaces/query-params";
 
+import { ITokenResponse } from "@interfaces/token-response";
+
 const getFilteredAndSortedProducts = async (
   filterCriteria: Record<string, string>,
   sortingOption: string,
   searchQuery: string
 ) => {
   try {
-    const tokenObject = JSON.parse(
-      localStorage.getItem("tokenObject") || "null"
+    const tokenObject: ITokenResponse = JSON.parse(
+      localStorage.getItem("tokenObject") ||
+        localStorage.getItem("unauthorizedTokenObject") ||
+        "null"
     );
-    const accessToken = tokenObject?.access_token || "";
+
+    const accessToken = tokenObject?.access_token;
     const apiHost = process.env.REACT_APP_API_HOST;
     const projectKey = process.env.REACT_APP_PROJECT_KEY;
 

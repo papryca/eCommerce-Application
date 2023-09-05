@@ -3,7 +3,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const Logout: React.FC = () => {
-  localStorage.clear();
+  localStorage.removeItem("tokenObject");
   return <Navigate to="/login" />;
 };
 export default Logout;

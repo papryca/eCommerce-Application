@@ -5,11 +5,13 @@ interface IMasterData {
 export interface IImage {
   url: string;
 }
+
 export interface IAttributes {
   filter(arg0: (attribute: IAttributes) => boolean): IAttributes[];
   name: string;
   value: number;
 }
+
 interface IPrice {
   value: {
     centAmount: number;
@@ -41,6 +43,7 @@ interface IProductData {
 
   masterVariant: IVariant;
 }
+
 export interface IProductResponse {
   id: string;
   version: number;
