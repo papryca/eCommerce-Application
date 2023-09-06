@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-console */
@@ -23,6 +24,8 @@ import {
   CircularProgress,
   Typography,
   Stack,
+  Link,
+  Breadcrumbs,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
@@ -38,6 +41,47 @@ const Catalog = () => {
   );
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [currentCategoryPath, setCurrentCategoryPath] = useState<string[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
+
+  // get category name using its id
+  const getCategoryNameById = (
+    categoryId: string,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    categories: Category[]
+  ): string => {
+    const category = categories.find((c) => c.id === categoryId);
+    return category ? category.name["en-US"] : "";
+  };
+
+  // updating breadcrumps path
+  const updateCurrentBreadcrumpPath = (categoryId: string) => {
+    const category = categories.find((c) => c.id === categoryId);
+    if (category) {
+      setCurrentCategoryPath(
+        category.ancestors
+          .map((ancestor) => getCategoryNameById(ancestor.id, categories))
+          .concat(category.name["en-US"])
+      );
+    }
+  };
+
+  // update breadcrumps when filtering by country
+  const updateCurrentBreadcrumpPathByCountry = (country: string) => {
+    setSelectedCountry(country);
+    const categoryForCountry = categories.find(
+      (c) => c.name["en-US"] === country
+    );
+
+    if (categoryForCountry) {
+      const newCategoryPath = categoryForCountry.ancestors
+        .map((ancestor) => getCategoryNameById(ancestor.id, categories))
+        .concat(country);
+      setCurrentCategoryPath(newCategoryPath);
+    } else {
+      setCurrentCategoryPath([]);
+    }
+  };
 
   // fetching products with filters and/or sorting applied
   const fetchFilteredAndSortedProducts = useCallback(async () => {
@@ -51,6 +95,9 @@ const Catalog = () => {
       );
       setProducts(response);
       setIsLoading(false);
+      updateCurrentBreadcrumpPath(
+        filterCriteria["variants.attributes.country"]
+      );
     } catch (error) {
       setSearchError(true);
       console.error("Error fetching products:", error);
@@ -83,6 +130,29 @@ const Catalog = () => {
     }
   }, []);
 
+  // handle the click on breadcrump
+  const handleBreadcrumbClick = (categoryName = "Catalog") => {
+    const categoryId = categories.find(
+      (c) => c.name["en-US"] === categoryName
+    )?.id;
+    if (categoryName === "Catalog") {
+      setSelectedCategory(null);
+      setCurrentCategoryPath([]);
+      const newFilterCriteria: Record<string, string> = {};
+      setFilterCriteria(newFilterCriteria);
+      setSelectedCountry("");
+    }
+
+    if (categoryId) {
+      const newFilterCriteria: Record<string, string> = {};
+      newFilterCriteria["categories.id"] = `subtree("${categoryId}")`;
+      setFilterCriteria(newFilterCriteria);
+      setSelectedCategory(categoryId);
+      updateCurrentBreadcrumpPath(categoryId);
+    }
+  };
+
+  // handling click on category
   const handleCategoryClick = (
     event: React.MouseEvent<HTMLDivElement>,
     categoryId: string
@@ -90,10 +160,12 @@ const Catalog = () => {
     setSelectedCategory(categoryId);
     if (categoryId === selectedCategory) {
       setSelectedCategory(null);
+      setCurrentCategoryPath([]);
     } else {
       const newFilterCriteria: Record<string, string> = {};
       newFilterCriteria["categories.id"] = ` subtree("${categoryId}")`;
       setFilterCriteria(newFilterCriteria);
+      updateCurrentBreadcrumpPath(categoryId);
     }
   };
 
@@ -113,11 +185,14 @@ const Catalog = () => {
     if (
       sortingOption ||
       Object.keys(filterCriteria).length > 0 ||
-      selectedCategory
+      selectedCategory ||
+      selectedCountry
     ) {
       fetchFilteredAndSortedProducts();
+      updateCurrentBreadcrumpPathByCountry(selectedCountry);
+      updateCurrentBreadcrumpPath(selectedCategory || "");
     }
-  }, [sortingOption, filterCriteria, selectedCategory]);
+  }, [sortingOption, filterCriteria, selectedCategory, selectedCountry]);
 
   return (
     <>
@@ -139,6 +214,29 @@ const Catalog = () => {
             />
           </Stack>
         </Box>
+        <Box mb={2}>
+          <Breadcrumbs separator=" / ">
+            <Link
+              underline="hover"
+              component="button"
+              variant="body2"
+              onClick={() => handleBreadcrumbClick()}
+            >
+              Catalog
+            </Link>
+            {currentCategoryPath.map((category) => (
+              <Link
+                underline="hover"
+                key={category}
+                component="button"
+                variant="body2"
+                onClick={() => handleBreadcrumbClick(category)}
+              >
+                {category}
+              </Link>
+            ))}
+          </Breadcrumbs>
+        </Box>
         <SearchField
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -158,6 +256,7 @@ const Catalog = () => {
         <FilterComponent
           onFilterChange={setFilterCriteria}
           selectedCategory={selectedCategory}
+          onCountryFilterChange={setSelectedCountry}
         />
         <Box className={styles.container}>
           {isLoading ? (

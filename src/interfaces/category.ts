@@ -6,7 +6,7 @@ export interface Category {
   name: ILocalizedText;
   slug: ILocalizedText;
   description: ILocalizedText;
-  ancestors: ICategory;
+  ancestors: ICategory[];
   parent: ICategory;
   orderHint: string;
 }
