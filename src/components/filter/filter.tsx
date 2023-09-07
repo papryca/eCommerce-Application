@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState } from "react";
 
 import { IFilterComponentProps } from "@components/filter/filter-props";
@@ -15,12 +14,12 @@ import {
 } from "@mui/material";
 
 import countries from "./country-data";
-
 import stars from "./stars-data";
 
 import styles from "./filter.module.scss";
 
 const FilterComponent: React.FC<IFilterComponentProps> = ({
+  selectedCategory,
   onFilterChange,
 }) => {
   const [countryFilter, setCountryFilter] = useState("");
@@ -52,6 +51,10 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
       "variants.price.centAmount"
     ] = `range(${minPrice} to ${maxPrice})`;
 
+    if (selectedCategory) {
+      newFilterCriteria["categories.id"] = `subtree("${selectedCategory}")`;
+    }
+
     onFilterChange(newFilterCriteria);
   };
 
@@ -60,9 +63,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
     setCountryFilter("");
     setPriceRange([0, 300000]);
     setStarRating("");
-    // onFilterChange({});
   };
-  // console.log(starRating);
 
   return (
     <Box className={styles.filterContainer}>
@@ -90,10 +91,6 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
           value={priceRange}
           onChange={(event, newValue) => setPriceRange(newValue as number[])}
           valueLabelDisplay="on"
-          // marks={[
-          //   { value: 0, label: "0$" },
-          //   { value: 300000, label: "3000$" },
-          // ]}
           aria-labelledby="range-slider"
           min={0}
           max={300000}

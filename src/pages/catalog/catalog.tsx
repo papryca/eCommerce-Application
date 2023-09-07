@@ -4,16 +4,26 @@
 import { useCallback, useEffect, useState } from "react";
 
 import CardComponent from "@components/card/card";
+import CategoryNavigation from "@components/category-navigation/category-navigation";
+
 import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
 import SearchField from "@components/search/search-field";
 import SortingField from "@components/sorting/sort-field";
+import { Category } from "@interfaces/category";
 import { IProductData } from "@interfaces/product-data";
 import { IProductSearchResult } from "@interfaces/product-search-result";
+import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
 import getProducts from "@services/get-products";
 
-import { Container, Box, CircularProgress, Typography } from "@mui/material";
+import {
+  Container,
+  Box,
+  CircularProgress,
+  Typography,
+  Stack,
+} from "@mui/material";
 
 import styles from "./catalog.module.scss";
 
@@ -26,6 +36,8 @@ const Catalog = () => {
   const [filterCriteria, setFilterCriteria] = useState<Record<string, string>>(
     {}
   );
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   // fetching products with filters and/or sorting applied
   const fetchFilteredAndSortedProducts = useCallback(async () => {
@@ -59,23 +71,74 @@ const Catalog = () => {
     }
   }, []);
 
+  // fetching categories
+  const fetchCategories = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await getCategories();
+      setCategories(response.results);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }, []);
+
+  const handleCategoryClick = (
+    event: React.MouseEvent<HTMLDivElement>,
+    categoryId: string
+  ) => {
+    setSelectedCategory(categoryId);
+    if (categoryId === selectedCategory) {
+      setSelectedCategory(null);
+    } else {
+      const newFilterCriteria: Record<string, string> = {};
+      newFilterCriteria["categories.id"] = ` subtree("${categoryId}")`;
+      setFilterCriteria(newFilterCriteria);
+    }
+  };
+
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
     if (!sortingOption && Object.keys(filterCriteria).length === 0) {
       console.log("fetchProducts");
       fetchProducts();
+      fetchCategories();
     }
 
-    if (sortingOption || Object.keys(filterCriteria).length > 0) {
+    if (!selectedCategory) {
+      delete filterCriteria["categories.id"];
       fetchFilteredAndSortedProducts();
-      console.log("fetchFilteredAndSortedProducts");
     }
-  }, [sortingOption, filterCriteria]);
+
+    if (
+      sortingOption ||
+      Object.keys(filterCriteria).length > 0 ||
+      selectedCategory
+    ) {
+      fetchFilteredAndSortedProducts();
+    }
+  }, [sortingOption, filterCriteria, selectedCategory]);
 
   return (
     <>
       <AppHeader />
       <Container className={styles.catalogContainer}>
+        <Box>
+          <Typography mb={2}>Categories:</Typography>
+          <Stack
+            direction="row"
+            spacing={1}
+            mb={2}
+            pb={2}
+            sx={{ overflow: "auto" }}
+          >
+            <CategoryNavigation
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onClick={handleCategoryClick}
+            />
+          </Stack>
+        </Box>
         <SearchField
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -92,7 +155,10 @@ const Catalog = () => {
         <Typography variant="h6" gutterBottom>
           Filters
         </Typography>
-        <FilterComponent onFilterChange={setFilterCriteria} />
+        <FilterComponent
+          onFilterChange={setFilterCriteria}
+          selectedCategory={selectedCategory}
+        />
         <Box className={styles.container}>
           {isLoading ? (
             <CircularProgress />
