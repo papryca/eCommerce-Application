@@ -13,7 +13,7 @@ import ArrowBackIosNewTwoToneIcon from "@mui/icons-material/ArrowBackIosNewTwoTo
 import ArrowForwardIosTwoToneIcon from "@mui/icons-material/ArrowForwardIosTwoTone";
 
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import { Modal, ImageList, ImageListItem } from "@mui/material";
+import { Modal } from "@mui/material";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -43,8 +43,11 @@ const ProductInformation = () => {
   // State to track when the modal is open
   const [isModalOpen, setModalOpen] = useState(false);
 
-  // State to track current slide index
+  // State to track current slide IN MODAL index
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
+
+  // State to track current slide index
+  const [currentSlideBasicIndex, setCurrentSlideBasicIndex] = React.useState(0);
 
   // Function to open the modal and set the current slide index
   const openModal = (index: number) => {
@@ -78,7 +81,7 @@ const ProductInformation = () => {
     setDescription(!isDescription);
   };
 
-  // Function to switch to the next slide
+  // Function to switch to the next slide IN MODAL
   const nextSlide = () => {
     if (product) {
       setCurrentSlideIndex(
@@ -89,9 +92,32 @@ const ProductInformation = () => {
     }
   };
 
-  // Function to switch to the previous slide
+  // Function to switch to the previous slide IN MODAL
   const prevSlide = () => {
     setCurrentSlideIndex((index) => {
+      if (product) {
+        return index === 0
+          ? product.masterData.current.masterVariant.images.length - 1
+          : index - 1;
+      }
+      return index;
+    });
+  };
+
+  // Function to switch to the next slide
+  const nextBasicSlide = () => {
+    if (product) {
+      setCurrentSlideBasicIndex(
+        (prevIndex) =>
+          (prevIndex + 1) %
+          product.masterData.current.masterVariant.images.length
+      );
+    }
+  };
+
+  // Function to switch to the previous slide
+  const prevBasicSlide = () => {
+    setCurrentSlideBasicIndex((index) => {
       if (product) {
         return index === 0
           ? product.masterData.current.masterVariant.images.length - 1
@@ -162,44 +188,37 @@ const ProductInformation = () => {
               </div>
               <ProductEstimation product={product} />
             </div>
-            <ImageList
-              className={styles.imageList}
-              style={isMobile ? { width: "100%" } : {}}
-              rowHeight={200}
-              gap={1}
-            >
-              {product.masterData.current.masterVariant.images.map(
-                (image, index) => {
-                  const rowHeight = index === 0 ? 400 : 200;
-                  const cols = index === 0 ? 2 : 1;
-                  const rows = index === 0 ? 2 : 1;
-                  const uniqueKey = `${product.id}-${index}`;
-                  return (
-                    <ImageListItem
-                      cols={cols}
-                      rows={rows}
-                      onClick={() => openModal(index)}
-                      key={uniqueKey}
-                    >
-                      {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-                      <img
-                        src={image.url}
-                        alt="product image"
-                        loading="lazy"
-                        style={{ height: rowHeight }}
-                      />
-                    </ImageListItem>
-                  );
-                }
-              )}
-            </ImageList>
+            <div style={{ maxWidth: 400 }}>
+              <div className={styles.arrows}>
+                <ArrowBackIosNewTwoToneIcon
+                  className={styles.arrowLeft}
+                  onClick={prevBasicSlide}
+                />
+                {/* eslint-disable-next-line jsx-a11y/img-redundant-alt, jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions */}
+                <img
+                  className={styles.image}
+                  // style={{ maxWidth: "300px" }}
+                  onClick={() => openModal(currentSlideBasicIndex)}
+                  src={
+                    product.masterData.current.masterVariant.images[
+                      currentSlideBasicIndex
+                    ].url
+                  }
+                  alt="product image"
+                />
+                <ArrowForwardIosTwoToneIcon
+                  className={styles.arrowRight}
+                  onClick={nextBasicSlide}
+                />
+              </div>
+            </div>
           </Box>
           <Modal
             open={isModalOpen}
             onClose={closeModal}
             className={styles.modal}
           >
-            <div>
+            <div className={styles.moooo}>
               <div className={styles.cross}>
                 <CancelOutlinedIcon
                   fontSize="large"

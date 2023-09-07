@@ -4,13 +4,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 65%;
+  width: 78%;
   height: 75%;
   margin: auto;
   position: relative;
 }
 .image {
-  width: 94%;
+  width: 84%;
   height: 100%;
   display: block;
   margin: 0 auto;
@@ -33,10 +33,11 @@
 }
 .product {
   display: flex;
-  justify-content: space-between;
   gap: 60px;
   margin-top: 50px;
   flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
 }
 .title {
   margin-top: 26px;
@@ -80,4 +81,8 @@
 }
 .noSale {
   color: $stricked-price-color;
+}
+
+div[tabindex="-1"]:focus-visible {
+  outline: none;
 }
