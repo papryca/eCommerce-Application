@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IProductResponse } from "@interfaces/product-response";
+import { IAttribute, IProductResponse } from "@interfaces/product-response";
 
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
@@ -8,10 +8,7 @@ import Typography from "@mui/material/Typography";
 import styles from "./modal.module.scss";
 
 const ProductEstimation = ({ product }: { product: IProductResponse }) => {
-  interface Attribute {
-    value: number;
-  }
-  const attribute: Attribute[] =
+  const attribute: IAttribute[] =
     product.masterData.current.masterVariant.attributes.filter(
       (attributeStar) => attributeStar.name === "Star-Rating"
     );
