@@ -21,6 +21,7 @@ import styles from "./filter.module.scss";
 const FilterComponent: React.FC<IFilterComponentProps> = ({
   selectedCategory,
   onFilterChange,
+  onCountryFilterChange,
 }) => {
   const [countryFilter, setCountryFilter] = useState("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 300000]);
@@ -56,6 +57,7 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
     }
 
     onFilterChange(newFilterCriteria);
+    onCountryFilterChange(countryFilter);
   };
 
   // clears the filters

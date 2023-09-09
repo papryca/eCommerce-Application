@@ -173,11 +173,13 @@ const ProductInformation = () => {
                   const rowHeight = index === 0 ? 400 : 200;
                   const cols = index === 0 ? 2 : 1;
                   const rows = index === 0 ? 2 : 1;
+                  const uniqueKey = `${product.id}-${index}`;
                   return (
                     <ImageListItem
                       cols={cols}
                       rows={rows}
                       onClick={() => openModal(index)}
+                      key={uniqueKey}
                     >
                       {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                       <img
