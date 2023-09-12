@@ -1,10 +1,12 @@
 import axios from "axios";
 
+import getValidAccessToken from "@helpers/check-token";
+import { ITokenResponse } from "@interfaces/token-response";
 import { IPasswordUpdate } from "@interfaces/user-update";
 
 const changePasswordRequest = async (data: IPasswordUpdate) => {
-  const tokenObject = JSON.parse(localStorage.getItem("tokenObject") || "null");
-  const accessToken = tokenObject?.access_token || "";
+  const tokenObject: ITokenResponse = await getValidAccessToken();
+  const accessToken = tokenObject.access_token;
   const apiHost = process.env.REACT_APP_API_HOST;
   const projectKey = process.env.REACT_APP_PROJECT_KEY;
 

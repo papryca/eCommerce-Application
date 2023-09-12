@@ -1,13 +1,13 @@
 import axios from "axios";
 
+import getValidAccessToken from "@helpers/check-token";
 import { IProductResponse } from "@interfaces/product-response";
 import { ITokenResponse } from "@interfaces/token-response";
-import { getAccessToken } from "@services/authentication-service";
 
 const getProductById = async (
   id: string | undefined
 ): Promise<IProductResponse> => {
-  const tokenObject: ITokenResponse = await getAccessToken();
+  const tokenObject: ITokenResponse = await getValidAccessToken();
 
   const apiHost = process.env.REACT_APP_API_HOST;
   const projectKey = process.env.REACT_APP_PROJECT_KEY;
