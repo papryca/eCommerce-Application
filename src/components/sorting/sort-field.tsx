@@ -11,6 +11,7 @@ import styles from "./sortingField.module.scss";
 const SortingField: React.FC<ISortingFieldProps> = ({
   sortingOption,
   setSortingOption,
+  onCloseSort,
 }) => {
   return (
     <Box className={styles.sortingContainer}>
@@ -19,7 +20,10 @@ const SortingField: React.FC<ISortingFieldProps> = ({
         <Select
           label="Sort by"
           value={sortingOption}
-          onChange={(e) => setSortingOption(e.target.value)}
+          onChange={(e) => {
+            setSortingOption(e.target.value);
+            onCloseSort();
+          }}
           displayEmpty
           className={styles.sortingSelect}
           variant="outlined"

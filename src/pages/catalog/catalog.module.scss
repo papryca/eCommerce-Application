@@ -1,10 +1,23 @@
 .container {
   max-width: 1200px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
   gap: 2vw;
   align-items: stretch;
   margin: 0 auto;
   justify-items: center;
   align-content: center;
+}
+
+.sortFilterConatiner {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto 0.5em auto;
+  justify-content: space-around;
+}
+
+.IconButton {
+  width: auto;
 }

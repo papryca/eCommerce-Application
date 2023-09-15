@@ -1,14 +1,20 @@
-import React from "react";
+/* eslint-disable no-console */
+import React, { useEffect, useState } from "react";
 
+import AddToCartButton from "@components/buttons/add-to-cart-btn";
+import getValidAccessToken from "@helpers/check-token";
 import calculateDiscount from "@helpers/claculate-discount";
 
 import sliceText from "@helpers/slice-text";
 
-import { IProductData } from "@interfaces/product-data";
+import { ILineItem } from "@interfaces/line-item";
 import { IProductSearchResult } from "@interfaces/product-search-result";
+import { addProductToCart, getCart } from "@services/cart-services";
+
 import { Link } from "react-router-dom";
 
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+
 import {
   CardMedia,
   CardContent,
@@ -23,43 +29,74 @@ import {
 
 import styles from "./card.module.scss";
 
-const CardComponent: React.FC<{
-  product: IProductData | IProductSearchResult;
-}> = ({ product }) => {
-  // check needed to use appropriate interface
-  const isProductData = "masterData" in product;
+interface ICardComponentProps {
+  product: IProductSearchResult;
+  cartItems: ILineItem[];
+}
 
-  const originalPrice = isProductData
-    ? product.masterData.current.masterVariant.prices[0].value.centAmount
-    : product.masterVariant.prices[0].value.centAmount;
-  const discountPrice = isProductData
-    ? product.masterData.current.masterVariant.prices[0].discounted?.value
-        .centAmount
-    : product.masterVariant.prices[0].discounted?.value.centAmount;
+const CardComponent: React.FC<ICardComponentProps> = ({
+  product,
+  cartItems,
+}) => {
+  const [isInCart, setIsInCart] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const addToCart = async (productId: string) => {
+    try {
+      setIsLoading(true);
+      const accessToken = await getValidAccessToken();
+      const currentCart = await getCart(accessToken.access_token);
+      const currentCartId = currentCart.id;
+      const currentCartVersion = currentCart.version;
+
+      await addProductToCart(
+        currentCartId,
+        currentCartVersion,
+        productId,
+        accessToken.access_token
+      );
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // handling adding product to cart
+  const handleAddToCart = () => {
+    try {
+      addToCart(product.id);
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      cartItems.push({ productId: product.id });
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      setIsInCart(true);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
+
+  const originalPrice = product.masterVariant.prices[0].value.centAmount;
+  const discountPrice =
+    product.masterVariant.prices[0].discounted?.value.centAmount;
 
   // calculate discount
   const discountPercentage = calculateDiscount(originalPrice, discountPrice);
 
   // trim the discription of product
-  const briefDescription = isProductData
-    ? sliceText(product.masterData.current.description["en-US"], 150)
-    : sliceText(product.description["en-US"], 150);
+  const briefDescription = sliceText(product.description["en-US"], 150);
+  const imageUrl = product.masterVariant.images[0].url;
+  const productName = product.name["en-US"];
+  const starRating = product.masterVariant.attributes.find(
+    (attribute) => attribute.name === "Star-Rating"
+  )?.value;
 
-  const imageUrl = isProductData
-    ? product.masterData.current.masterVariant.images[0].url
-    : product.masterVariant.images[0].url;
-
-  const productName = isProductData
-    ? product.masterData.current.name["en-US"]
-    : product.name["en-US"];
-
-  const starRating = isProductData
-    ? product.masterData.current.masterVariant.attributes.find(
-        (attribute) => attribute.name === "Star-Rating"
-      )?.value
-    : product.masterVariant.attributes.find(
-        (attribute) => attribute.name === "Star-Rating"
-      )?.value;
+  useEffect(() => {
+    const isProductInCart = cartItems.some(
+      (item: ILineItem) => item.productId === product.id
+    );
+    setIsInCart(isProductInCart);
+  }, [cartItems, product.id]);
 
   return (
     <Card className={styles.card}>
@@ -121,6 +158,11 @@ const CardComponent: React.FC<{
               More
             </Button>
           </Link>
+          <AddToCartButton
+            isInCart={isInCart}
+            handleAddToCart={handleAddToCart}
+            isLoadingButton={isLoading}
+          />
         </CardActions>
       </CardContent>
     </Card>

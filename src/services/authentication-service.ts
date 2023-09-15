@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from "axios";
 import getValidAccessToken from "@helpers/check-token";
 import setTokenObject from "@helpers/set-token-expiration";
 import { ILoginData } from "@interfaces/login-form-data";
-// import { ICustomerLoginResponse } from "@interfaces/login-response";
 import {
   IRegistrateData,
   ICustomerRegistrationResponse,
@@ -105,9 +104,16 @@ const loginCustomer = async (
     Authorization: `Bearer ${accessToken}`,
   };
 
+  const anonymCartID = localStorage.getItem("anonymCardID");
+
   const data = {
     email,
     password,
+    activeCartSignInMode: "MergeWithExistingCustomerCart",
+    anonymousCart: {
+      id: anonymCartID,
+      typeId: "cart",
+    },
   };
 
   let response;
@@ -126,7 +132,17 @@ const loginCustomer = async (
   return response?.data?.customer as IUserFullDataResponse;
 };
 
+// login with anonymous token
 export const getTokenAndLogin = async (data: ILoginData) => {
+  const token = await getValidAccessToken();
+  getAccessTokenPassFlow(data.email, data.password);
+  return loginCustomer(token.access_token, data.email, data.password);
+  // const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
+  // return loginCustomer(tokenObject.access_token, data.email, data.password);
+};
+
+// login with passflow token
+export const getTokenAndLoginAfterRegistrate = async (data: ILoginData) => {
   const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
 
   return loginCustomer(tokenObject.access_token, data.email, data.password);
@@ -146,9 +162,21 @@ const registrateCustomer = async (
   };
 
   try {
+    await axios.post(
+      `${apiHost}/${projectKey}/me/carts`,
+      {
+        currency: "USD",
+      },
+      { headers }
+    );
+
+    const userDataWithCart = {
+      ...data,
+      activeCartSignInMode: "MergeWithExistingCustomerCart",
+    };
     const response = await axios.post<ICustomerRegistrationResponse>(
       `${apiHost}/${projectKey}/me/signup`,
-      data,
+      userDataWithCart,
       { headers }
     );
 

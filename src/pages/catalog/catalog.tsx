@@ -11,13 +11,16 @@ import FilterComponent from "@components/filter/filter";
 import AppHeader from "@components/header/header";
 import SearchField from "@components/search/search-field";
 import SortingField from "@components/sorting/sort-field";
+import getValidAccessToken from "@helpers/check-token";
 import { Category } from "@interfaces/category";
-import { IProductData } from "@interfaces/product-data";
+import { ILineItem } from "@interfaces/line-item";
 import { IProductSearchResult } from "@interfaces/product-search-result";
+import { getCart } from "@services/cart-services";
 import getCategories from "@services/get-categories-by-id";
 import getFilteredAndSortedProducts from "@services/get-filtered-and-sorted";
-import getProducts from "@services/get-products";
 
+import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
+import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
 import {
   Container,
   Box,
@@ -26,12 +29,15 @@ import {
   Stack,
   Link,
   Breadcrumbs,
+  Drawer,
+  IconButton,
+  Badge,
 } from "@mui/material";
 
 import styles from "./catalog.module.scss";
 
 const Catalog = () => {
-  const [products, setProducts] = useState<IProductData[]>([]);
+  const [products, setProducts] = useState<IProductSearchResult[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchError, setSearchError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +49,12 @@ const Catalog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentCategoryPath, setCurrentCategoryPath] = useState<string[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [areFiltersApplied, setAreFiltersApplied] = useState(false);
+  const [countryFilter, setCountryFilter] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 300000]);
+  const [starRating, setStarRating] = useState("");
 
   // get category name using its id
   const getCategoryNameById = (
@@ -94,29 +106,41 @@ const Catalog = () => {
         searchQuery
       );
       setProducts(response);
-      setIsLoading(false);
       updateCurrentBreadcrumpPath(
         filterCriteria["variants.attributes.country"]
       );
+
+      let filtersApplied;
+
+      switch (true) {
+        case Object.keys(filterCriteria).length === 0:
+          filtersApplied = false;
+          break;
+        case Object.keys(filterCriteria).some(
+          (key) =>
+            key === "variants.price.centAmount" &&
+            filterCriteria[key] !== "range(0 to 300000)"
+        ):
+          filtersApplied = true;
+          break;
+        case Object.keys(filterCriteria).some(
+          (key) =>
+            key === "variants.attributes.country" ||
+            key === "variants.attributes.Star-Rating"
+        ):
+          filtersApplied = true;
+          break;
+        default:
+          filtersApplied = false;
+      }
+      setAreFiltersApplied(filtersApplied);
+      setIsLoading(false);
     } catch (error) {
       setSearchError(true);
       console.error("Error fetching products:", error);
       setIsLoading(false);
     }
   }, [searchQuery, sortingOption, filterCriteria]);
-
-  // fetching the list of products
-  const fetchProducts = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const response = await getProducts();
-      setProducts(response.results);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error fetching products:", error);
-    }
-  }, []);
 
   // fetching categories
   const fetchCategories = useCallback(async () => {
@@ -158,6 +182,7 @@ const Catalog = () => {
     categoryId: string
   ) => {
     setSelectedCategory(categoryId);
+    // setIsCategoryFilterApplied(true);
     if (categoryId === selectedCategory) {
       setSelectedCategory(null);
       setCurrentCategoryPath([]);
@@ -166,23 +191,40 @@ const Catalog = () => {
       newFilterCriteria["categories.id"] = ` subtree("${categoryId}")`;
       setFilterCriteria(newFilterCriteria);
       updateCurrentBreadcrumpPath(categoryId);
+      setCountryFilter("");
+      setPriceRange([0, 300000]);
+      setStarRating("");
     }
   };
+  const [cartItems, setCartItems] = useState<ILineItem[]>([]);
+
+  useEffect(() => {
+    // Fetch the cart items and update state
+    const fetchCartItems = async () => {
+      try {
+        const accessToken = await getValidAccessToken();
+        const currentCart = await getCart(accessToken.access_token);
+        setCartItems(currentCart.lineItems);
+      } catch (error) {
+        console.error("Error fetching cart items:", error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   // handle fetching, filtering, sorting, and searching based on dependencies
   useEffect(() => {
-    if (!sortingOption && Object.keys(filterCriteria).length === 0) {
-      console.log("fetchProducts");
-      fetchProducts();
-      fetchCategories();
-    }
-
     if (!selectedCategory) {
       delete filterCriteria["categories.id"];
       fetchFilteredAndSortedProducts();
-    }
-
-    if (
+      updateCurrentBreadcrumpPathByCountry(selectedCountry);
+      updateCurrentBreadcrumpPath(selectedCategory || "");
+    } else if (
       sortingOption ||
       Object.keys(filterCriteria).length > 0 ||
       selectedCategory ||
@@ -199,14 +241,8 @@ const Catalog = () => {
       <AppHeader />
       <Container className={styles.catalogContainer}>
         <Box>
-          <Typography mb={2}>Categories:</Typography>
-          <Stack
-            direction="row"
-            spacing={1}
-            mb={2}
-            pb={2}
-            sx={{ overflow: "auto" }}
-          >
+          <Typography mb={1}>Categories:</Typography>
+          <Stack direction="row" spacing={1} pb={2} sx={{ overflow: "auto" }}>
             <CategoryNavigation
               categories={categories}
               selectedCategory={selectedCategory}
@@ -214,7 +250,7 @@ const Catalog = () => {
             />
           </Stack>
         </Box>
-        <Box mb={2}>
+        <Box mb={1}>
           <Breadcrumbs separator=" / ">
             <Link
               underline="hover"
@@ -243,31 +279,74 @@ const Catalog = () => {
           searchHandler={fetchFilteredAndSortedProducts}
           isLoading={isLoading}
         />
-        <Typography variant="h6" gutterBottom>
-          Sorting
-        </Typography>
-        <SortingField
-          sortingOption={sortingOption}
-          setSortingOption={setSortingOption}
-        />
-        <Typography variant="h6" gutterBottom>
-          Filters
-        </Typography>
-        <FilterComponent
-          onFilterChange={setFilterCriteria}
-          selectedCategory={selectedCategory}
-          onCountryFilterChange={setSelectedCountry}
-        />
+        <Box className={styles.sortFilterConatiner}>
+          <IconButton
+            className={styles.IconButton}
+            onClick={() => setIsFilterOpen(true)}
+          >
+            <Badge
+              badgeContent={areFiltersApplied ? "!" : null}
+              color="error"
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <TuneRoundedIcon />
+            </Badge>
+          </IconButton>
+          <IconButton
+            className={styles.IconButton}
+            onClick={() => setIsSortOpen(true)}
+          >
+            <SortByAlphaRoundedIcon />
+          </IconButton>
+        </Box>
+        <Drawer
+          anchor="bottom"
+          open={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+        >
+          <FilterComponent
+            onFilterChange={setFilterCriteria}
+            selectedCategory={selectedCategory}
+            onCountryFilterChange={setSelectedCountry}
+            onCloseFilter={() => setIsFilterOpen(false)}
+            countryFilter={countryFilter}
+            setCountryFilter={setCountryFilter}
+            priceRange={priceRange}
+            setPriceRange={setPriceRange}
+            starRating={starRating}
+            setStarRating={setStarRating}
+          />
+        </Drawer>
+        <Drawer
+          anchor="bottom"
+          open={isSortOpen}
+          onClose={() => setIsSortOpen(false)}
+        >
+          <SortingField
+            sortingOption={sortingOption}
+            setSortingOption={setSortingOption}
+            onCloseSort={() => setIsSortOpen(false)}
+          />
+        </Drawer>
         <Box className={styles.container}>
           {isLoading ? (
             <CircularProgress />
           ) : searchError ? (
             <p>Too short request</p>
-          ) : !searchError && products.length === 0 ? (
+          ) : !searchError &&
+            products.length === 0 &&
+            (searchQuery || Object.keys(filterCriteria).length > 0) ? (
             <p>No such product found. Try again</p>
           ) : (
-            products.map((product: IProductData | IProductSearchResult) => (
-              <CardComponent key={product.id} product={product} />
+            products.map((product: IProductSearchResult) => (
+              <CardComponent
+                key={product.id}
+                product={product}
+                cartItems={cartItems}
+              />
             ))
           )}
         </Box>
