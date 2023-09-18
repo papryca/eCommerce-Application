@@ -1,5 +1,3 @@
-// import { useState } from "react";
-
 import { ILineItem } from "@interfaces/cart";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -43,6 +41,14 @@ const CartItem = (props: ICartItemProps) => {
     changeProductQuantity(lineItem.id, 0);
   };
 
+  const discountPrice =
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    lineItem.variant.prices[0].discounted?.value.centAmount * lineItem.quantity;
+  const originalPrice =
+    lineItem.variant.prices[0].value.centAmount * lineItem.quantity;
+  const totalPrice = lineItem.totalPrice.centAmount;
+  const promoApplied = totalPrice < (discountPrice || originalPrice);
+
   return (
     <Paper className={styles.paper} elevation={2}>
       <Typography
@@ -57,7 +63,7 @@ const CartItem = (props: ICartItemProps) => {
         alt="hotel"
         className={styles.image}
       />
-      <Box className={styles.price}>
+      <Box className={styles.actions}>
         <Box className={styles.quantity}>
           <IconButton
             disabled={lineItem.quantity === 1 || disabled}
@@ -83,9 +89,63 @@ const CartItem = (props: ICartItemProps) => {
             <AddCircleIcon color="secondary" />
           </IconButton>
         </Box>
-        <Typography>
-          {(lineItem.totalPrice.centAmount / 100).toFixed()} USD
-        </Typography>
+        {discountPrice ? (
+          <Box className={styles.discounted}>
+            <Typography className={styles.originalPriceStriked}>
+              <span>Original Price: </span>
+              <span className={styles.price}>
+                {(originalPrice / 100).toFixed()} $
+              </span>
+            </Typography>
+            <Typography
+              className={
+                promoApplied
+                  ? styles.discountedPriceStriked
+                  : styles.discountedPrice
+              }
+            >
+              <span>Discounted Price: </span>
+              <span className={styles.price}>
+                {(discountPrice / 100).toFixed()} $
+              </span>
+            </Typography>
+            <Typography
+              className={
+                promoApplied ? styles.totalPricePromo : styles.totalPrice
+              }
+            >
+              <span>Total Price: </span>
+              <span className={styles.price}>
+                {(totalPrice / 100).toFixed()} $
+              </span>
+            </Typography>
+          </Box>
+        ) : (
+          <Box className={styles.discounted}>
+            <Typography
+              className={
+                promoApplied
+                  ? styles.originalPriceStriked
+                  : styles.originalPrice
+              }
+            >
+              <span>Original Price: </span>
+              <span className={styles.price}>
+                {(originalPrice / 100).toFixed()} $
+              </span>
+            </Typography>
+            <Typography
+              className={
+                promoApplied ? styles.totalPricePromo : styles.totalPrice
+              }
+            >
+              <span>Total Price: </span>
+              <span className={styles.price}>
+                {(totalPrice / 100).toFixed()} $
+              </span>
+            </Typography>
+          </Box>
+        )}
         <IconButton
           disabled={disabled}
           onClick={deleteProduct}

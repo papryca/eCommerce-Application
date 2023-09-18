@@ -1,3 +1,38 @@
+@import "../../sass/abstract/constants";
+
 .link {
   padding-left: 50px;
+}
+
+.promoCodeContainer {
+  background: $color-info;
+  padding: 10px;
+  border: 1px solid $color-secondary;
+  border-radius: 5px;
+  margin-top: 20px;
+  text-align: center;
+  animation: blinkAnimation 3s ease-in-out infinite;
+}
+
+@keyframes blinkAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.activePromoCode {
+  font-size: 18px;
+  color: $color-text;
+  font-weight: bold;
+}
+
+.promoCode {
+  font-size: 20px;
+  color: $price-color;
 }

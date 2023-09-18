@@ -1,3 +1,5 @@
+@import "../../sass/abstract/constants";
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -40,7 +42,7 @@ input[type="number"] {
 
 .cartContainer,
 .paper,
-.price,
+.actions,
 .quantity,
 .empty,
 .total,
@@ -75,6 +77,7 @@ input[type="number"] {
 
 .price {
   justify-content: space-around;
+  gap: 0.6vw;
 }
 
 .paper {
@@ -82,9 +85,20 @@ input[type="number"] {
 }
 
 .title,
-.image,
+.image {
+  width: 25%;
+}
+
+.discounted {
+  width: 45%;
+}
+
 .quantity {
   width: 30%;
+}
+
+.actions {
+  width: 50%;
 }
 
 .image {
@@ -120,7 +134,7 @@ input[type="number"] {
   justify-content: center;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 730px) {
   .paper {
     flex-direction: column;
   }
@@ -129,11 +143,65 @@ input[type="number"] {
     width: 40%;
   }
 
-  .price {
-    width: 100%;
+  .discounted {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .title {
     width: 100%;
   }
+
+  .actions {
+    width: 80%;
+    min-width: 310px;
+  }
+}
+
+.originalPriceStriked {
+  text-decoration: line-through;
+  color: $stricked-price-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.discountedPrice {
+  font-weight: bold;
+  color: $discounted-price-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.totalPricePromo {
+  font-size: 18px;
+  color: $promocode-total-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.totalPrice {
+  color: $price-color;
+  font-size: 16px;
+  text-align: center;
+  align-self: flex-start;
+}
+.discountedPriceStriked {
+  text-decoration: line-through;
+  font-weight: bold;
+  color: $discounted-price-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.totalStriked {
+  text-decoration: line-through;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px;
 }

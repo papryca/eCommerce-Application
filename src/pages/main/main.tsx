@@ -4,7 +4,7 @@ import AppHeader from "@components/header/header";
 import HeaderRoute from "@components/header/header-route";
 import routes from "@components/header/tabs";
 
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import styles from "./main.module.scss";
 
@@ -16,6 +16,8 @@ const Home = () => {
     routes.registration,
     routes.profile,
   ];
+
+  const activePromoCode = "RS-20";
 
   return (
     <>
@@ -29,6 +31,12 @@ const Home = () => {
           );
         })}
       </Grid>
+      <div className={styles.promoCodeContainer}>
+        <Typography variant="body1" className={styles.activePromoCode}>
+          Activate Promo Code in Cart:{" "}
+          <span className={styles.promoCode}>{activePromoCode}</span>
+        </Typography>
+      </div>
     </>
   );
 };
