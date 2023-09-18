@@ -231,6 +231,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
           type="button"
           variant="contained"
           color="secondary"
+          className={styles.button}
           onClick={onDelete}
         >
           Delete
@@ -240,6 +241,7 @@ const AddressDataForm = (addressData: IAddressDataFormProps) => {
           type="button"
           variant="contained"
           color="primary"
+          className={styles.button}
           onClick={setDefault}
         >
           Set default

@@ -5,6 +5,8 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { CircularProgress } from "@mui/material";
 import Button from "@mui/material/Button";
 
+import styles from "../card/card.module.scss";
+
 interface AddToCartButtonProps {
   isInCart: boolean;
   handleAddToCart: () => void;
@@ -18,6 +20,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 }) => {
   return (
     <Button
+      className={styles.button}
       variant="contained"
       size="small"
       color={isInCart ? "secondary" : "success"}

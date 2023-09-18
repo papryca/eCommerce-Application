@@ -201,7 +201,6 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
           />
           {isPersonalDataDisabled ? (
             <Button
-              className="big-button"
               type="button"
               variant="contained"
               color="primary"
@@ -210,18 +209,13 @@ const PersonalDataForm = (props: IPersonalDataFormProps) => {
               Edit
             </Button>
           ) : (
-            <Button
-              className="big-button"
-              type="submit"
-              variant="contained"
-              color="info"
-            >
+            <Button type="submit" variant="contained" color="info">
               Save
             </Button>
           )}
         </form>
         <Button
-          className="big-button"
+          className={styles.button}
           type="button"
           variant="contained"
           color="info"
