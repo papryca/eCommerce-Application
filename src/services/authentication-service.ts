@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import axios, { AxiosResponse } from "axios";
 
+import getValidAccessToken from "@helpers/check-token";
+import setTokenObject from "@helpers/set-token-expiration";
 import { ILoginData } from "@interfaces/login-form-data";
-// import { ICustomerLoginResponse } from "@interfaces/login-response";
 import {
   IRegistrateData,
   ICustomerRegistrationResponse,
@@ -13,13 +14,14 @@ import {
   IUserFullDataResponse,
 } from "@interfaces/user-response";
 
+// token requests data
+const authHost = process.env.REACT_APP_AUTH_HOST;
+const clientId = process.env.REACT_APP_CLIENT_ID;
+const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+const basicAuth = btoa(`${clientId}:${clientSecret}`);
+
 //  get an access token from the CommerceTools
 export const getAccessToken = async () => {
-  const authHost = process.env.REACT_APP_AUTH_HOST;
-  const clientId = process.env.REACT_APP_CLIENT_ID;
-  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
-
-  const basicAuth = btoa(`${clientId}:${clientSecret}`);
   const headers = {
     Authorization: `Basic ${basicAuth}`,
     "Content-Type": "application/x-www-form-urlencoded",
@@ -27,7 +29,28 @@ export const getAccessToken = async () => {
 
   try {
     const response: AxiosResponse<ITokenResponse> = await axios.post(
-      `${authHost}/oauth/token?grant_type=client_credentials`,
+      `${authHost}/oauth/ecommerce-app-final-task/anonymous/token?grant_type=client_credentials`,
+      null,
+      { headers }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// Refresh access token
+export const refreshAccessToken = async (expiredToken: string) => {
+  const headers = {
+    Authorization: `Basic ${basicAuth}`,
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
+  try {
+    const response: AxiosResponse<ITokenResponse> = await axios.post(
+      `${authHost}/oauth/token?grant_type=refresh_token&refresh_token=${expiredToken}`,
       null,
       { headers }
     );
@@ -44,11 +67,6 @@ export const getAccessTokenPassFlow = async (
   email: string,
   password: string
 ) => {
-  const authHost = process.env.REACT_APP_AUTH_HOST;
-  const clientId = process.env.REACT_APP_CLIENT_ID;
-  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
-
-  const basicAuth = btoa(`${clientId}:${clientSecret}`);
   const headers = {
     Authorization: `Basic ${basicAuth}`,
     "Content-Type": "application/x-www-form-urlencoded",
@@ -67,7 +85,7 @@ export const getAccessTokenPassFlow = async (
     { headers }
   );
 
-  localStorage.setItem("tokenObject", JSON.stringify(response.data));
+  setTokenObject(response.data, "tokenObject");
 
   return response.data;
 };
@@ -86,23 +104,46 @@ const loginCustomer = async (
     Authorization: `Bearer ${accessToken}`,
   };
 
+  const anonymCartID = localStorage.getItem("anonymCardID");
+
   const data = {
     email,
     password,
+    activeCartSignInMode: "MergeWithExistingCustomerCart",
+    anonymousCart: {
+      id: anonymCartID,
+      typeId: "cart",
+    },
   };
 
-  const response = await axios.post<ILoginResponse>(
-    `${apiHost}/${projectKey}/me/login`,
-    data,
-    { headers }
-  );
+  let response;
+  try {
+    response = await axios.post<ILoginResponse>(
+      `${apiHost}/${projectKey}/me/login`,
+      data,
+      { headers }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 
-  return response?.data?.customer;
+  localStorage.removeItem("unauthorizedTokenObject");
+
+  return response?.data?.customer as IUserFullDataResponse;
 };
 
+// login with anonymous token
 export const getTokenAndLogin = async (data: ILoginData) => {
+  const token = await getValidAccessToken();
+  getAccessTokenPassFlow(data.email, data.password);
+  return loginCustomer(token.access_token, data.email, data.password);
+  // const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
+  // return loginCustomer(tokenObject.access_token, data.email, data.password);
+};
+
+// login with passflow token
+export const getTokenAndLoginAfterRegistrate = async (data: ILoginData) => {
   const tokenObject = await getAccessTokenPassFlow(data.email, data.password);
-  localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
 
   return loginCustomer(tokenObject.access_token, data.email, data.password);
 };
@@ -121,9 +162,21 @@ const registrateCustomer = async (
   };
 
   try {
+    await axios.post(
+      `${apiHost}/${projectKey}/me/carts`,
+      {
+        currency: "USD",
+      },
+      { headers }
+    );
+
+    const userDataWithCart = {
+      ...data,
+      activeCartSignInMode: "MergeWithExistingCustomerCart",
+    };
     const response = await axios.post<ICustomerRegistrationResponse>(
       `${apiHost}/${projectKey}/me/signup`,
-      data,
+      userDataWithCart,
       { headers }
     );
 
@@ -136,11 +189,7 @@ const registrateCustomer = async (
 };
 
 export const getTokenAndRegistrate = async (user: IRegistrateData) => {
-  const tokenObject: ITokenResponse = await getAccessToken();
-  const customerInfo = await registrateCustomer(tokenObject.access_token, user);
-  if (customerInfo) {
-    localStorage.setItem("tokenObject", JSON.stringify(tokenObject));
-  }
+  const tokenObject = await getValidAccessToken();
 
-  return customerInfo;
+  return registrateCustomer(tokenObject.access_token, user);
 };

@@ -1,0 +1,207 @@
+@import "../../sass/abstract/constants";
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+
+.cartContainer,
+.paper,
+.totalContainer,
+.total {
+  width: 100%;
+}
+
+.cartContainer,
+.paper,
+.total {
+  padding: 7px;
+}
+
+.totalContainer {
+  padding: 15px 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.stack {
+  width: 100%;
+  padding: 0;
+}
+
+.cartContainer,
+.paper,
+.actions,
+.quantity,
+.empty,
+.total,
+.promocode {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.empty,
+.promocode {
+  flex-direction: column;
+  gap: 20px;
+}
+
+.empty {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.empty svg {
+  max-height: 700px;
+}
+.cartContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 30px;
+}
+
+.price {
+  justify-content: space-around;
+  gap: 0.6vw;
+}
+
+.paper {
+  gap: 15px;
+}
+
+.title,
+.image {
+  width: 25%;
+}
+
+.discounted {
+  width: 45%;
+}
+
+.quantity {
+  width: 30%;
+}
+
+.actions {
+  width: 50%;
+}
+
+.image {
+  max-height: 200px;
+}
+
+.input {
+  width: 30%;
+  min-width: 35px;
+  text-align: center;
+  border: 1.5px solid #435b66;
+  border-radius: 5px;
+}
+
+.promocode,
+.payBtn {
+  box-sizing: border-box;
+  width: 250px;
+}
+
+.promoText,
+.promoBtn {
+  width: 100%;
+}
+
+.clearBtn,
+.payBtn {
+  right: 25px;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 730px) {
+  .paper {
+    flex-direction: column;
+  }
+
+  .image {
+    width: 40%;
+  }
+
+  .discounted {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .title {
+    width: 100%;
+  }
+
+  .actions {
+    width: 80%;
+    min-width: 310px;
+  }
+}
+
+.originalPriceStriked {
+  text-decoration: line-through;
+  color: $stricked-price-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.discountedPrice {
+  font-weight: bold;
+  color: $discounted-price-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.totalPricePromo {
+  font-size: 18px;
+  color: $promocode-total-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.totalPrice {
+  color: $price-color;
+  font-size: 16px;
+  text-align: center;
+  align-self: flex-start;
+}
+.discountedPriceStriked {
+  text-decoration: line-through;
+  font-weight: bold;
+  color: $discounted-price-color;
+  text-align: center;
+  align-self: flex-start;
+}
+
+.totalStriked {
+  text-decoration: line-through;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px;
+}

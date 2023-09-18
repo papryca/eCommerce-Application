@@ -113,6 +113,7 @@ const AddressesList = (props: IAddressesListProps) => {
           type="button"
           variant="contained"
           color="info"
+          className={styles.button}
           onClick={onAddAddress}
         >
           Add address

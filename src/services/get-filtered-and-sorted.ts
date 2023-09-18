@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import axios, { AxiosError } from "axios";
 
+import getValidAccessToken from "@helpers/check-token";
 import { IQueryParams } from "@interfaces/query-params";
 
 import { ITokenResponse } from "@interfaces/token-response";
@@ -8,14 +9,12 @@ import { ITokenResponse } from "@interfaces/token-response";
 const getFilteredAndSortedProducts = async (
   filterCriteria: Record<string, string>,
   sortingOption: string,
-  searchQuery: string
+  searchQuery: string,
+  limit: number,
+  offset: number
 ) => {
   try {
-    const tokenObject: ITokenResponse = JSON.parse(
-      localStorage.getItem("tokenObject") ||
-        localStorage.getItem("unauthorizedTokenObject") ||
-        "null"
-    );
+    const tokenObject: ITokenResponse = await getValidAccessToken();
 
     const accessToken = tokenObject?.access_token;
     const apiHost = process.env.REACT_APP_API_HOST;
@@ -33,7 +32,10 @@ const getFilteredAndSortedProducts = async (
       )
       .join("&");
 
-    const queryParams: IQueryParams = {};
+    const queryParams: IQueryParams = {
+      limit,
+      offset,
+    };
 
     if (sortingOption) {
       queryParams.sort = sortingOption;
@@ -53,7 +55,7 @@ const getFilteredAndSortedProducts = async (
       }
     );
 
-    return response.data.results;
+    return response.data;
   } catch (error) {
     if (
       (error as AxiosError).response &&

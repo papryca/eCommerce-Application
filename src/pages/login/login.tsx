@@ -54,7 +54,7 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<ILoginData> = async (data) => {
     try {
       const customerInfo = await getTokenAndLogin(data);
-
+      // localStorage.removeItem("cartId");
       console.log("Customer logged in successfully", customerInfo);
 
       navigate("/", { replace: true });

@@ -34,6 +34,11 @@ const HeaderDesktop = () => {
           icon={routes.cart.icon}
           label={routes.cart.label}
         />
+        <HeaderRoute
+          to={routes.aboutUs.link}
+          icon={routes.aboutUs.icon}
+          label={routes.aboutUs.label}
+        />
         {hasToken ? (
           <>
             <HeaderRoute

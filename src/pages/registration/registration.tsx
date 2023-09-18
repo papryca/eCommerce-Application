@@ -12,7 +12,8 @@ import convertFormDataToRegistrateData from "@helpers/convert-form-data";
 import { ILoginData } from "@interfaces/login-form-data";
 import { IRegisterFormData } from "@interfaces/registration-form-data";
 import {
-  getTokenAndLogin,
+  // getTokenAndLogin,
+  getTokenAndLoginAfterRegistrate,
   getTokenAndRegistrate,
 } from "@services/authentication-service";
 import dayjs from "dayjs";
@@ -143,7 +144,8 @@ const Registration: React.FC = () => {
 
   const login = async (data: ILoginData) => {
     try {
-      const customerInfo = await getTokenAndLogin(data);
+      // const customerInfo = await getTokenAndLogin(data);
+      const customerInfo = await getTokenAndLoginAfterRegistrate(data);
 
       console.log("Customer logged in successfully", customerInfo);
       navigate("/", { replace: true });

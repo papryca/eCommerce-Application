@@ -2,6 +2,7 @@ import React from "react";
 
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CottageTwoToneIcon from "@mui/icons-material/CottageTwoTone";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
 import HowToRegTwoToneIcon from "@mui/icons-material/HowToRegTwoTone";
 import LoginTwoToneIcon from "@mui/icons-material/LoginTwoTone";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -59,6 +60,12 @@ const routes: RouteDictionary = {
     icon: <AccountCircleIcon />,
     label: "PROFILE",
     link: "/profile",
+  },
+  aboutUs: {
+    index: 8,
+    icon: <Diversity3Icon />,
+    label: "About us",
+    link: "/about-us",
   },
 };
 

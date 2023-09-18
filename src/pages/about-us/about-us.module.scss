@@ -1,0 +1,60 @@
+@import "../../sass/abstract/constants";
+.aboutAs {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+}
+.cart {
+  display: flex;
+  justify-content: center;
+}
+.modal {
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+}
+.name {
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+.text {
+  margin: 20px;
+}
+.link {
+  color: $color-primary-dark;
+  text-decoration: none;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.cross {
+  position: relative;
+}
+.close {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  cursor: pointer;
+}
+.school {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.schoolLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import theme from "@constants/theme";
-import { ITokenResponse } from "@interfaces/token-response";
-import { getAccessToken } from "@services/authentication-service";
+import getValidAccessToken from "@helpers/check-token";
 
+import AboutUs from "@pages/about-us/about-us";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material";
@@ -18,34 +18,13 @@ import Home from "./pages/main/main";
 
 import Product from "./pages/products/products";
 import Profile from "./pages/profile/profile";
-
 import Registration from "./pages/registration/registration";
 
 import "./app.scss";
 import "./index.scss";
 
 const App = () => {
-  const checkToken = async () => {
-    let tokenObject: ITokenResponse = JSON.parse(
-      localStorage.getItem("tokenObject") ||
-        localStorage.getItem("unauthorizedTokenObject") ||
-        "null"
-    );
-    if (!tokenObject || !tokenObject.access_token) {
-      try {
-        tokenObject = await getAccessToken();
-
-        localStorage.setItem(
-          "unauthorizedTokenObject",
-          JSON.stringify(tokenObject)
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  checkToken();
+  getValidAccessToken();
 
   return (
     <Router>
@@ -61,6 +40,7 @@ const App = () => {
                 <Route path="/catalog" element={<Catalog />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/catalog/:id" element={<Product />} />
                 <Route path="*" element={<Page404 />} />
               </Routes>
