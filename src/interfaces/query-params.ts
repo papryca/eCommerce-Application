@@ -4,4 +4,7 @@ export interface IQueryParams {
   "text.en-Us"?: string;
   fuzzy?: string;
   fuzzyLevel?: string;
+  limit: number;
+  offset: number;
+  total?: number;
 }

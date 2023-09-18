@@ -9,7 +9,9 @@ import { ITokenResponse } from "@interfaces/token-response";
 const getFilteredAndSortedProducts = async (
   filterCriteria: Record<string, string>,
   sortingOption: string,
-  searchQuery: string
+  searchQuery: string,
+  limit: number,
+  offset: number
 ) => {
   try {
     const tokenObject: ITokenResponse = await getValidAccessToken();
@@ -30,7 +32,10 @@ const getFilteredAndSortedProducts = async (
       )
       .join("&");
 
-    const queryParams: IQueryParams = {};
+    const queryParams: IQueryParams = {
+      limit,
+      offset,
+    };
 
     if (sortingOption) {
       queryParams.sort = sortingOption;
@@ -50,7 +55,7 @@ const getFilteredAndSortedProducts = async (
       }
     );
 
-    return response.data.results;
+    return response.data;
   } catch (error) {
     if (
       (error as AxiosError).response &&
