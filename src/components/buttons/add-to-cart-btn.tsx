@@ -27,6 +27,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
       onClick={handleAddToCart}
       startIcon={<ShoppingCartIcon />}
       disabled={isInCart || isLoadingButton}
+      style={{ marginTop: "10px" }}
     >
       {isLoadingButton ? (
         <CircularProgress size={20} color="inherit" />

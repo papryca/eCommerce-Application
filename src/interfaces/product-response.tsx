@@ -12,7 +12,7 @@ export interface IAttributes {
   value: number;
 }
 
-interface IPrice {
+export interface IPrice {
   value: {
     centAmount: number;
   };
@@ -23,16 +23,17 @@ interface IPrice {
   };
 }
 
-interface IVariant {
+export interface IVariant {
   images: IImage[];
   prices: IPrice[];
   attributes: IAttributes;
+  id: number;
 }
 enum Locale {
   EnUS = "en-US",
 }
 
-interface ITranslation {
+export interface ITranslation {
   [Locale.EnUS]: string;
 }
 

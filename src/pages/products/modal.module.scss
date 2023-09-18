@@ -27,6 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 30px;
 }
 .article {
   margin: 30px;
@@ -36,7 +37,6 @@
   gap: 60px;
   margin-top: 50px;
   flex-direction: row-reverse;
-  align-items: center;
   justify-content: center;
 }
 .title {
