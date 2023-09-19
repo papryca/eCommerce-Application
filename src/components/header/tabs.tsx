@@ -64,7 +64,7 @@ const routes: RouteDictionary = {
   aboutUs: {
     index: 8,
     icon: <Diversity3Icon />,
-    label: "About us",
+    label: "ABOUT US",
     link: "/about-us",
   },
 };

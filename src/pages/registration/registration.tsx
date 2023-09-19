@@ -144,8 +144,9 @@ const Registration: React.FC = () => {
 
   const login = async (data: ILoginData) => {
     try {
-      // const customerInfo = await getTokenAndLogin(data);
       const customerInfo = await getTokenAndLoginAfterRegistrate(data);
+
+      localStorage.removeItem("cartItems");
 
       console.log("Customer logged in successfully", customerInfo);
       navigate("/", { replace: true });

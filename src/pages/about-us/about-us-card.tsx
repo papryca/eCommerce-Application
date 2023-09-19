@@ -12,7 +12,6 @@ import {
   Box,
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   Grid,
@@ -40,13 +39,18 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <Card sx={{ width: 345 }}>
-      <CardActionArea>
-        {/* eslint-disable-next-line react/jsx-no-undef */}
+    <Card
+      sx={
+        isMobile
+          ? { width: 350, padding: "1em" }
+          : { width: "37%", padding: "1em" }
+      }
+    >
+      <Box>
         <Avatar
-          alt="Remy Sharp"
+          alt={data.name}
           src={data.imageSrc}
-          sx={{ width: 300, height: 300, margin: "auto" }}
+          sx={{ width: 280, height: 280, margin: "auto" }}
         />
         <CardContent>
           <Box textAlign="center">
@@ -55,12 +59,15 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
             </Typography>
           </Box>
           {data.jobTitle.map((title) => (
-            <Typography variant="h6" color="text.secondary">
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              key={data.jobTitle.indexOf(title)}
+            >
               {title}
             </Typography>
           ))}
           <CardActions>
-            {/* eslint-disable-next-line react/jsx-no-undef */}
             <Grid container justifyContent="center">
               <Button size="medium" color="success" onClick={openModal}>
                 Learn More
@@ -86,9 +93,8 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                       : { flexDirection: "row" }
                   }
                 >
-                  {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
                   <Avatar
-                    alt="Remy Sharp"
+                    alt={data.name}
                     src={data.imageSrc}
                     sx={{
                       width: 100,
@@ -102,32 +108,36 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     </Typography>
 
                     {data.jobTitle.map((title) => (
-                      <Typography gutterBottom variant="h6">
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        key={data.jobTitle.indexOf(title)}
+                      >
                         {title}
                       </Typography>
                     ))}
                   </div>
                 </div>
                 <div className={styles.text}>
-                  <Typography variant="body1">
+                  <Box>
                     <b>Skills:</b>
                     {data.skills.map((skill) => (
-                      <Typography variant="body1">
+                      <Box key={data.skills.indexOf(skill)}>
                         <Typography variant="body1">{skill}</Typography>
-                      </Typography>
+                      </Box>
                     ))}
-                  </Typography>
-                  <Typography variant="body1">
+                  </Box>
+                  <Box>
                     <b>Education:</b>
                     <Typography variant="body1">{data.education}</Typography>
-                  </Typography>
+                  </Box>
                   <br />
-                  <Typography variant="body1">
+                  <Box>
                     <b>Courses:</b>
-                    <Typography variant="body1">
+                    <Box>
                       <ul>
                         {data.courses.map((course) => (
-                          <li>
+                          <li key={data.courses.indexOf(course)}>
                             <Link
                               to={course.link}
                               target="_blank"
@@ -138,14 +148,14 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                           </li>
                         ))}
                       </ul>
-                    </Typography>
-                  </Typography>
-                  <Typography variant="body1">
+                    </Box>
+                  </Box>
+                  <Box>
                     <b>English:</b>
                     <Typography variant="body1">{data.englishLevel}</Typography>
-                  </Typography>
+                  </Box>
                   <br />
-                  <Typography variant="body1">
+                  <Box>
                     <div style={{ display: "flex" }}>
                       <Link
                         to={data.githubProfile}
@@ -166,23 +176,25 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                         <span>Link to the GitHub profile</span>
                       </Link>
                     </div>
-                  </Typography>
+                  </Box>
                 </div>
               </Box>
             </Modal>
           </CardActions>
         </CardContent>
-      </CardActionArea>
-      <Typography variant="body1" align="center">
+      </Box>
+      <Box className={styles.implementedFunctionsContainer}>
         <b>Implemented functions:</b>
         {data.implemented.map((task) => (
-          <Typography variant="body1">
+          <Box key={data.implemented.indexOf(task)}>
             <ul>
-              <li>{task}</li>
+              <li>
+                <Typography variant="body1">{task}</Typography>
+              </li>
             </ul>
-          </Typography>
+          </Box>
         ))}
-      </Typography>
+      </Box>
     </Card>
   );
 };

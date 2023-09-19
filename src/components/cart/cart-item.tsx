@@ -1,3 +1,4 @@
+import EventSystem from "@helpers/event-system";
 import { ILineItem } from "@interfaces/cart";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -39,6 +40,13 @@ const CartItem = (props: ICartItemProps) => {
 
   const deleteProduct = () => {
     changeProductQuantity(lineItem.id, 0);
+
+    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    const updateCartItems = cartItems.filter(
+      (item: { productId: string }) => item.productId !== lineItem.productId
+    );
+    localStorage.setItem("cartItems", JSON.stringify(updateCartItems));
+    EventSystem.onCartUpdate();
   };
 
   const discountPrice =

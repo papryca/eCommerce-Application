@@ -33,7 +33,7 @@ const AboutUsPage = () => {
         }
       >
         {cardsData.map((data) => (
-          <AboutUsCard data={data} />
+          <AboutUsCard data={data} key={data.name} />
         ))}
       </div>
       <TeamCollaboration />
@@ -42,8 +42,7 @@ const AboutUsPage = () => {
         target="_blank"
         className={styles.schoolLink}
       >
-        {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-        <img src={RsSchool} alt="Course Image" className={styles.school} />
+        <img src={RsSchool} alt="RsSchool Course" className={styles.school} />
       </Link>
     </div>
   );

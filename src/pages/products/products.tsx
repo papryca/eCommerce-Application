@@ -6,6 +6,7 @@ import AddToCartButton from "@components/buttons/add-to-cart-btn";
 import RemoveFromCartBtn from "@components/buttons/remove-from-cart-btn";
 import AppHeader from "@components/header/header";
 import getValidAccessToken from "@helpers/check-token";
+import EventSystem from "@helpers/event-system";
 import { ICartResponse } from "@interfaces/get-cart";
 import { ILineItem } from "@interfaces/line-item";
 import { IProductResponse } from "@interfaces/product-response";
@@ -216,6 +217,7 @@ const ProductInformation = () => {
         localStorage.setItem("cartItems", JSON.stringify(cartItems));
         setIsInCart(true);
         setRemoveAlertOpen(false);
+        EventSystem.onCartUpdate();
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
@@ -240,6 +242,7 @@ const ProductInformation = () => {
         localStorage.setItem("cartItems", JSON.stringify(updateCartItems));
         setIsInCart(false);
         setRemoveAlertOpen(true);
+        EventSystem.onCartUpdate();
       }
     } catch (error) {
       console.error("Error removing product from cart:", error);

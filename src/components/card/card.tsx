@@ -5,6 +5,7 @@ import AddToCartButton from "@components/buttons/add-to-cart-btn";
 import getValidAccessToken from "@helpers/check-token";
 import calculateDiscount from "@helpers/claculate-discount";
 
+import EventSystem from "@helpers/event-system";
 import sliceText from "@helpers/slice-text";
 
 import { ILineItem } from "@interfaces/line-item";
@@ -65,11 +66,12 @@ const CardComponent: React.FC<ICardComponentProps> = ({
   // handling adding product to cart
   const handleAddToCart = () => {
     try {
-      addToCart(product.id);
+      addToCart(product.id).then();
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
       cartItems.push({ productId: product.id });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      EventSystem.onCartUpdate();
       setIsInCart(true);
     } catch (error) {
       console.error("Error adding product to cart:", error);

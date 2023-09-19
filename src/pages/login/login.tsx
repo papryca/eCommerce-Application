@@ -6,9 +6,12 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 
 import AppHeader from "@components/header/header";
+import getValidAccessToken from "@helpers/check-token";
+import { ICart } from "@interfaces/cart";
 import { ILoginData } from "@interfaces/login-form-data";
 
 import { getTokenAndLogin } from "@services/authentication-service";
+import { getCart } from "@services/cart-services";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -54,7 +57,9 @@ const Login: React.FC = () => {
   const onSubmit: SubmitHandler<ILoginData> = async (data) => {
     try {
       const customerInfo = await getTokenAndLogin(data);
-      // localStorage.removeItem("cartId");
+      const tokenObject = await getValidAccessToken();
+      const cart: ICart = await getCart(tokenObject.access_token);
+      localStorage.setItem("cartItems", JSON.stringify(cart.lineItems));
       console.log("Customer logged in successfully", customerInfo);
 
       navigate("/", { replace: true });

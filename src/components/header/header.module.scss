@@ -1,10 +1,11 @@
 @import "../../sass/abstract/constants";
 .header {
   margin: 30px 30px 30px 20px;
+  white-space: nowrap;
 }
 .link {
   text-decoration: none;
-  margin-left: 30px;
+  margin-left: 20px;
   color: $color-primary-dark;
   &:hover {
     text-decoration: underline;
@@ -14,4 +15,8 @@
   width: 70px;
   height: 70px;
   margin-left: 35px;
+}
+
+.burgerIcon {
+  cursor: pointer;
 }

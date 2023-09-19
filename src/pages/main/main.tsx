@@ -10,6 +10,7 @@ import styles from "./main.module.scss";
 
 const Home = () => {
   const items = [
+    routes.aboutUs,
     routes.catalog,
     routes.cart,
     routes.login,

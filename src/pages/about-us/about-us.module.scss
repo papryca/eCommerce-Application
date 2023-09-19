@@ -1,20 +1,26 @@
 @import "../../sass/abstract/constants";
 .aboutAs {
   display: flex;
-  justify-content: center;
-  gap: 80px;
+  justify-content: space-between;
+  gap: 2vw;
+  max-width: 84%;
+  margin: 0 auto;
 }
 .cart {
   display: flex;
   justify-content: center;
 }
+
 .modal {
-  width: 500px;
+  width: calc(100% - 2em);
+  max-width: 500px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
+  border-radius: 10px;
+  padding: 10px;
 }
 .name {
   display: flex;

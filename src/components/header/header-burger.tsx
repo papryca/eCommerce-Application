@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { ReactComponent as LogoImage } from "@assets/icons/logo.svg";
+import CartRoute from "@components/header/cart-route";
 import HeaderRoute from "@components/header/header-route";
 import routes from "@components/header/tabs";
 
@@ -25,7 +26,7 @@ const HeaderBurger = () => {
           <LogoImage />
         </div>
       </Link>
-      <MenuIcon onClick={toggleDrawer} />
+      <MenuIcon onClick={toggleDrawer} className={styles.burgerIcon} />
       <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
         <Box
           sx={{
@@ -40,6 +41,7 @@ const HeaderBurger = () => {
               position: "absolute",
               top: "20px",
               right: "20px",
+              cursor: "pointer",
             }}
           />
           <HeaderRoute
@@ -52,7 +54,7 @@ const HeaderBurger = () => {
             icon={routes.catalog.icon}
             label={routes.catalog.label}
           />
-          <HeaderRoute
+          <CartRoute
             to={routes.cart.link}
             icon={routes.cart.icon}
             label={routes.cart.label}

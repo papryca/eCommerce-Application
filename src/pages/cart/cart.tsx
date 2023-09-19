@@ -8,6 +8,7 @@ import AppHeader from "@components/header/header";
 
 import ClearCartPopup from "@components/modal/clear-cart-popup";
 import getValidAccessToken from "@helpers/check-token";
+import EventSystem from "@helpers/event-system";
 import { ICart } from "@interfaces/cart";
 import {
   changeLineItemQuantity,
@@ -46,6 +47,8 @@ const Cart = () => {
       const cart: ICart = await getCart(tokenObject.access_token);
       setBasket(cart);
       setLoading(false);
+
+      localStorage.setItem("cartItems", JSON.stringify(cart.lineItems));
     } catch {
       setError(true);
       setLoading(false);
@@ -82,12 +85,15 @@ const Cart = () => {
 
     await deleteCart(basket.id, basket.version);
     await loadBasket();
+    localStorage.removeItem("cartItems");
+    EventSystem.onCartUpdate();
 
     setButtonsDisabled(false);
   };
 
   useEffect(() => {
     loadBasket();
+    // EventSystem.onCartUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
