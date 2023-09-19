@@ -29,6 +29,8 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
   setPriceRange,
   starRating,
   setStarRating,
+  setOffset,
+  setCurrentPage,
 }) => {
   // apply filters by country and price range
   const handleApplyFilters = () => {
@@ -62,6 +64,8 @@ const FilterComponent: React.FC<IFilterComponentProps> = ({
     onFilterChange(newFilterCriteria);
     onCountryFilterChange(countryFilter);
     onCloseFilter();
+    setOffset(0);
+    setCurrentPage(1);
   };
 
   // clears the filters

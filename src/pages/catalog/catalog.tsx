@@ -348,6 +348,8 @@ const Catalog = () => {
             setPriceRange={setPriceRange}
             starRating={starRating}
             setStarRating={setStarRating}
+            setOffset={setOffset}
+            setCurrentPage={setCurrentPage}
           />
         </Drawer>
         <Drawer

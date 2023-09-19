@@ -9,4 +9,6 @@ export interface IFilterComponentProps {
   setPriceRange: React.Dispatch<React.SetStateAction<number[]>>;
   starRating: string;
   setStarRating: React.Dispatch<React.SetStateAction<string>>;
+  setOffset: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
