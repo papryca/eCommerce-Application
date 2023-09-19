@@ -49,6 +49,10 @@ const CartItem = (props: ICartItemProps) => {
     EventSystem.onCartUpdate();
   };
 
+  const unitPrice = lineItem.price.discounted?.value
+    ? lineItem.price.discounted.value.centAmount
+    : lineItem.price.value.centAmount;
+
   const discountPrice =
     // eslint-disable-next-line no-unsafe-optional-chaining
     lineItem.variant.prices[0].discounted?.value.centAmount * lineItem.quantity;
@@ -73,29 +77,39 @@ const CartItem = (props: ICartItemProps) => {
       />
       <Box className={styles.actions}>
         <Box className={styles.quantity}>
-          <IconButton
-            disabled={lineItem.quantity === 1 || disabled}
-            onClick={decreaseQuantity}
-            aria-label="delete"
-          >
-            <RemoveCircleIcon
-              color={lineItem.quantity === 1 ? "disabled" : "primary"}
+          <Box className={styles.inputContainer}>
+            <IconButton
+              disabled={lineItem.quantity === 1 || disabled}
+              onClick={decreaseQuantity}
+              aria-label="delete"
+            >
+              <RemoveCircleIcon
+                color={lineItem.quantity === 1 ? "disabled" : "primary"}
+              />
+            </IconButton>
+            <input
+              disabled
+              type="number"
+              min="1"
+              value={lineItem.quantity}
+              className={styles.input}
             />
-          </IconButton>
-          <input
-            disabled
-            type="number"
-            min="1"
-            value={lineItem.quantity}
-            className={styles.input}
-          />
-          <IconButton
-            disabled={disabled}
-            onClick={increaseQuantity}
-            aria-label="delete"
-          >
-            <AddCircleIcon color="secondary" />
-          </IconButton>
+            <IconButton
+              disabled={disabled}
+              onClick={increaseQuantity}
+              aria-label="delete"
+            >
+              <AddCircleIcon color="secondary" />
+            </IconButton>
+          </Box>
+          <Box className={styles.perUnit}>
+            <Typography sx={{ fontSize: "0.6rem" }}>
+              <span>Price per unit: </span>
+              <span className={styles.pricePerUnit}>
+                {(unitPrice / 100).toFixed()} $
+              </span>
+            </Typography>
+          </Box>
         </Box>
         {discountPrice ? (
           <Box className={styles.discounted}>
