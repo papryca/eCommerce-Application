@@ -213,7 +213,7 @@ const ProductInformation = () => {
         addToCart(product.id);
         // eslint-disable-next-line @typescript-eslint/no-shadow
         const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-        cartItems.push({ productId: product?.id });
+        cartItems.push({ productId: product?.id, quantity: 1 });
         localStorage.setItem("cartItems", JSON.stringify(cartItems));
         setIsInCart(true);
         setRemoveAlertOpen(false);

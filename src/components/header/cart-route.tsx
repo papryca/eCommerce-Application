@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { IHeaderRoute } from "@components/header/header-route";
 import EventSystem from "@helpers/event-system";
+import { ILineItem } from "@interfaces/cart";
 import { Link } from "react-router-dom";
 
 import { Box, Icon, IconButton, Typography } from "@mui/material";
@@ -19,8 +20,13 @@ const CartRoute: React.FC<IHeaderRoute> = ({ to, icon, label }) => {
   useEffect(() => {
     EventSystem.onCartUpdate = () => {
       const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-      setCartItemsCount(cartItems.length);
+      const totalQuantity = cartItems.reduce(
+        (total: number, item: ILineItem) => total + item.quantity,
+        0
+      );
+      setCartItemsCount(totalQuantity);
     };
+
     EventSystem.onCartUpdate();
   }, []);
 

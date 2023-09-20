@@ -49,6 +49,7 @@ const Cart = () => {
       setLoading(false);
 
       localStorage.setItem("cartItems", JSON.stringify(cart.lineItems));
+      EventSystem.onCartUpdate();
     } catch {
       setError(true);
       setLoading(false);
@@ -67,6 +68,10 @@ const Cart = () => {
     );
 
     setBasket(cart);
+    localStorage.setItem("cartItems", JSON.stringify(cart.lineItems));
+
+    EventSystem.onCartUpdate();
+
     setButtonsDisabled(false);
   };
 
@@ -93,7 +98,6 @@ const Cart = () => {
 
   useEffect(() => {
     loadBasket();
-    // EventSystem.onCartUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

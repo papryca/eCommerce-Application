@@ -69,7 +69,7 @@ const CardComponent: React.FC<ICardComponentProps> = ({
       addToCart(product.id).then();
       // eslint-disable-next-line @typescript-eslint/no-shadow
       const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-      cartItems.push({ productId: product.id });
+      cartItems.push({ productId: product.id, quantity: 1 });
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
       EventSystem.onCartUpdate();
       setIsInCart(true);
