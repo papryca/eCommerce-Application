@@ -23,6 +23,7 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  Paper,
   TextField,
   Typography,
 } from "@mui/material";
@@ -89,66 +90,68 @@ const Login: React.FC = () => {
     <>
       <AppHeader />
       <Box className={styles.container}>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Email"
-                fullWidth
-                error={!!errors.email}
-                variant="outlined"
-                helperText={errors.email?.message}
-                InputProps={{
-                  ...field,
-                  autoComplete: "off",
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Password"
-                fullWidth
-                variant="outlined"
-                type={showPassword ? "text" : "password"}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleTogglePassword}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  ...field,
-                  autoComplete: "off",
-                }}
-              />
-            )}
-          />
-          <Button
-            className="button"
-            type="submit"
-            variant="contained"
-            color="primary"
-          >
-            Login
-          </Button>
-        </form>
-        <Typography className={styles.title} variant="h6" color="secondary">
-          I’m new here{" "}
-          <Link className={styles.link} to="/registration">
-            Register
-          </Link>
-        </Typography>
+        <Paper className={styles.paper}>
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  label="Email"
+                  fullWidth
+                  error={!!errors.email}
+                  variant="outlined"
+                  helperText={errors.email?.message}
+                  InputProps={{
+                    ...field,
+                    autoComplete: "off",
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  label="Password"
+                  fullWidth
+                  variant="outlined"
+                  type={showPassword ? "text" : "password"}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleTogglePassword}>
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    ...field,
+                    autoComplete: "off",
+                  }}
+                />
+              )}
+            />
+            <Button
+              className="button"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+          </form>
+          <Typography className={styles.title} variant="h6" color="secondary">
+            I’m new here{" "}
+            <Link className={styles.link} to="/registration">
+              Register
+            </Link>
+          </Typography>
+        </Paper>
       </Box>
     </>
   );

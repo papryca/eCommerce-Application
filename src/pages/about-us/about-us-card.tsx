@@ -69,7 +69,7 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
           ))}
           <CardActions>
             <Grid container justifyContent="center">
-              <Button size="medium" color="success" onClick={openModal}>
+              <Button size="medium" color="secondary" onClick={openModal}>
                 Learn More
               </Button>
             </Grid>
@@ -90,7 +90,7 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                   style={
                     isMobile
                       ? { flexDirection: "column" }
-                      : { flexDirection: "row" }
+                      : { flexDirection: "row", justifyContent: "space-around" }
                   }
                 >
                   <Avatar
@@ -99,7 +99,6 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     sx={{
                       width: 100,
                       height: 100,
-                      marginRight: 6,
                     }}
                   />
                   <div className={styles.name}>
@@ -120,7 +119,7 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                 </div>
                 <div className={styles.text}>
                   <Box>
-                    <b>Skills:</b>
+                    <Typography variant="h6">Skills:</Typography>
                     {data.skills.map((skill) => (
                       <Box key={data.skills.indexOf(skill)}>
                         <Typography variant="body1">{skill}</Typography>
@@ -128,12 +127,11 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     ))}
                   </Box>
                   <Box>
-                    <b>Education:</b>
+                    <Typography variant="h6">Education:</Typography>
                     <Typography variant="body1">{data.education}</Typography>
                   </Box>
-                  <br />
                   <Box>
-                    <b>Courses:</b>
+                    <Typography variant="h6">Courses:</Typography>
                     <Box>
                       <ul>
                         {data.courses.map((course) => (
@@ -151,31 +149,27 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
                     </Box>
                   </Box>
                   <Box>
-                    <b>English:</b>
+                    <Typography variant="h6">English level:</Typography>
                     <Typography variant="body1">{data.englishLevel}</Typography>
                   </Box>
-                  <br />
-                  <Box>
-                    <div style={{ display: "flex" }}>
-                      <Link
-                        to={data.githubProfile}
-                        color="inherit"
-                        className={styles.link}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "20px",
-                        }}
-                        target="_blank"
-                      >
-                        <Avatar
-                          alt="Inesa photo"
-                          src={GitHab}
-                          sx={{ width: 40, height: 40 }}
-                        />
-                        <span>Link to the GitHub profile</span>
-                      </Link>
-                    </div>
+                  <Box className={styles.linkContainer}>
+                    <Link
+                      to={data.githubProfile}
+                      color="inherit"
+                      className={styles.link}
+                      style={{
+                        display: "flex",
+                        justifySelf: "center",
+                        gap: "20px",
+                      }}
+                      target="_blank"
+                    >
+                      <Avatar
+                        alt="Inesa photo"
+                        src={GitHab}
+                        sx={{ width: 40, height: 40, alignSelf: "center" }}
+                      />
+                    </Link>
                   </Box>
                 </div>
               </Box>
@@ -183,8 +177,10 @@ const AboutUsCard = ({ data }: { data: CardData }) => {
           </CardActions>
         </CardContent>
       </Box>
-      <Box className={styles.implementedFunctionsContainer}>
-        <b>Implemented functions:</b>
+      <Box textAlign="center">
+        <Typography variant="h6" className={styles.implemented}>
+          Implemented functions:
+        </Typography>
         {data.implemented.map((task) => (
           <Box key={data.implemented.indexOf(task)}>
             <ul>

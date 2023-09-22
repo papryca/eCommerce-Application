@@ -36,6 +36,7 @@ import {
   FormControlLabel,
   Checkbox,
   Modal,
+  Paper,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
@@ -216,281 +217,164 @@ const Registration: React.FC = () => {
     <>
       <AppHeader />
       <Box sx={{ display: "flex" }} className={styles.container}>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-          <Typography variant="h6" color="secondary">
-            Login data
-          </Typography>
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Email"
-                fullWidth
-                error={!!errors.email}
-                variant="outlined"
-                helperText={errors.email?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="password"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Password"
-                fullWidth
-                variant="outlined"
-                type={showPassword ? "text" : "password"}
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={handleTogglePassword}>
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Typography variant="h6" color="secondary">
-            Personal data
-          </Typography>
-          <Controller
-            name="firstName"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="First name"
-                fullWidth
-                error={!!errors.firstName}
-                variant="outlined"
-                helperText={errors.firstName?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="lastName"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Last name"
-                fullWidth
-                error={!!errors.lastName}
-                variant="outlined"
-                helperText={errors.lastName?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="birthday"
-            control={control}
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => {
-              const { value, onChange } = field;
-              return (
-                <DatePicker
-                  label="Date of birth"
-                  format="YYYY-MM-DD"
-                  maxDate={dayjs(dataDelta)}
-                  value={dayjs(value)}
-                  onChange={(newValue) => onChange(newValue)}
-                  slotProps={{
-                    textField: {
-                      required: true,
-                      helperText: error?.message,
-                    },
-                  }}
-                />
-              );
-            }}
-          />
-          <Typography variant="h6" color="secondary">
-            Shipping address
-          </Typography>
-          <FormControlLabel
-            name="shippingChecked"
-            control={
-              <Checkbox
-                checked={shippingChecked}
-                onChange={onShippingChange}
-                icon={<FavoriteBorder />}
-                checkedIcon={<Favorite />}
-              />
-            }
-            label="Make default shipping address"
-          />
-          <Controller
-            name="shippingStreet"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Street"
-                fullWidth
-                error={!!errors.shippingStreet}
-                variant="outlined"
-                helperText={errors.shippingStreet?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="shippingCity"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="City"
-                fullWidth
-                error={!!errors.shippingCity}
-                variant="outlined"
-                helperText={errors.shippingCity?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Controller
-            name="shippingCountry"
-            control={control}
-            defaultValue=""
-            render={({ field }) => {
-              const { value, onChange } = field;
-              const country = value
-                ? countries.find((opt) => value === opt.value) ?? null
-                : null;
-              return (
-                <Autocomplete
-                  value={country}
-                  options={countries}
-                  onChange={(event, newValue) => {
-                    onChange(newValue ? newValue.value : null);
-                  }}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props}>
-                      {option.label}
-                    </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Choose a country"
-                      error={!!errors.shippingCountry}
-                      helperText={errors.shippingCountry?.message}
-                      inputProps={{
-                        ...params.inputProps,
-                        autoComplete: "new-password",
-                      }}
-                    />
-                  )}
-                />
-              );
-            }}
-          />
-          <Controller
-            name="shippingPostcode"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                label="Postal code"
-                fullWidth
-                error={!!errors.shippingPostcode}
-                variant="outlined"
-                helperText={errors.shippingPostcode?.message}
-                InputProps={{
-                  ...field,
-                }}
-              />
-            )}
-          />
-          <Typography variant="h6" color="secondary">
-            Billing address
-          </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isOneAddressChecked}
-                onChange={bilingAdressUpdate}
-              />
-            }
-            label="The same as shipping address"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={billingChecked}
-                onChange={onBillingChange}
-                icon={<FavoriteBorder />}
-                checkedIcon={<Favorite />}
-              />
-            }
-            label="Make default billing address"
-          />
-          {!isDisabled && (
+        <Paper className={styles.paper}>
+          <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+            <Typography variant="h6" color="secondary">
+              Login data
+            </Typography>
             <Controller
-              name="billingStreet"
+              name="email"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField
-                  disabled={isDisabled}
+                  label="Email"
+                  fullWidth
+                  error={!!errors.email}
+                  variant="outlined"
+                  helperText={errors.email?.message}
+                  InputProps={{
+                    ...field,
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="password"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  label="Password"
+                  fullWidth
+                  variant="outlined"
+                  type={showPassword ? "text" : "password"}
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={handleTogglePassword}>
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    ...field,
+                  }}
+                />
+              )}
+            />
+            <Typography variant="h6" color="secondary">
+              Personal data
+            </Typography>
+            <Controller
+              name="firstName"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  label="First name"
+                  fullWidth
+                  error={!!errors.firstName}
+                  variant="outlined"
+                  helperText={errors.firstName?.message}
+                  InputProps={{
+                    ...field,
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="lastName"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  label="Last name"
+                  fullWidth
+                  error={!!errors.lastName}
+                  variant="outlined"
+                  helperText={errors.lastName?.message}
+                  InputProps={{
+                    ...field,
+                  }}
+                />
+              )}
+            />
+            <Controller
+              name="birthday"
+              control={control}
+              rules={{ required: true }}
+              render={({ field, fieldState: { error } }) => {
+                const { value, onChange } = field;
+                return (
+                  <DatePicker
+                    label="Date of birth"
+                    format="YYYY-MM-DD"
+                    maxDate={dayjs(dataDelta)}
+                    value={dayjs(value)}
+                    onChange={(newValue) => onChange(newValue)}
+                    slotProps={{
+                      textField: {
+                        required: true,
+                        helperText: error?.message,
+                      },
+                    }}
+                  />
+                );
+              }}
+            />
+            <Typography variant="h6" color="secondary">
+              Shipping address
+            </Typography>
+            <FormControlLabel
+              name="shippingChecked"
+              control={
+                <Checkbox
+                  checked={shippingChecked}
+                  onChange={onShippingChange}
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                />
+              }
+              label="Make default shipping address"
+            />
+            <Controller
+              name="shippingStreet"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
                   label="Street"
                   fullWidth
-                  error={!!errors.billingStreet}
+                  error={!!errors.shippingStreet}
                   variant="outlined"
-                  helperText={errors.billingStreet?.message}
+                  helperText={errors.shippingStreet?.message}
                   InputProps={{
                     ...field,
                   }}
                 />
               )}
             />
-          )}
-          {!isDisabled && (
             <Controller
-              name="billingCity"
+              name="shippingCity"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField
-                  disabled={isDisabled}
                   label="City"
                   fullWidth
-                  error={!!errors.billingCity}
+                  error={!!errors.shippingCity}
                   variant="outlined"
-                  helperText={errors.billingCity?.message}
+                  helperText={errors.shippingCity?.message}
                   InputProps={{
                     ...field,
                   }}
                 />
               )}
             />
-          )}
-          {!isDisabled && (
             <Controller
-              name="billingCountry"
+              name="shippingCountry"
               control={control}
               defaultValue=""
               render={({ field }) => {
@@ -500,7 +384,6 @@ const Registration: React.FC = () => {
                   : null;
                 return (
                   <Autocomplete
-                    disabled={isDisabled}
                     value={country}
                     options={countries}
                     onChange={(event, newValue) => {
@@ -515,8 +398,8 @@ const Registration: React.FC = () => {
                       <TextField
                         {...params}
                         label="Choose a country"
-                        error={!!errors.billingCountry}
-                        helperText={errors.billingCountry?.message}
+                        error={!!errors.shippingCountry}
+                        helperText={errors.shippingCountry?.message}
                         inputProps={{
                           ...params.inputProps,
                           autoComplete: "new-password",
@@ -527,36 +410,157 @@ const Registration: React.FC = () => {
                 );
               }}
             />
-          )}
-          {!isDisabled && (
             <Controller
-              name="billingPostcode"
+              name="shippingPostcode"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <TextField
-                  disabled={isDisabled}
                   label="Postal code"
                   fullWidth
-                  error={!!errors.billingPostcode}
+                  error={!!errors.shippingPostcode}
                   variant="outlined"
-                  helperText={errors.billingPostcode?.message}
+                  helperText={errors.shippingPostcode?.message}
                   InputProps={{
                     ...field,
                   }}
                 />
               )}
             />
-          )}
-          <Button
-            className="button"
-            type="submit"
-            variant="contained"
-            color="primary"
-          >
-            Submit
-          </Button>
-        </form>
+            <Typography variant="h6" color="secondary">
+              Billing address
+            </Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isOneAddressChecked}
+                  onChange={bilingAdressUpdate}
+                />
+              }
+              label="The same as shipping address"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={billingChecked}
+                  onChange={onBillingChange}
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                />
+              }
+              label="Make default billing address"
+            />
+            {!isDisabled && (
+              <Controller
+                name="billingStreet"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    disabled={isDisabled}
+                    label="Street"
+                    fullWidth
+                    error={!!errors.billingStreet}
+                    variant="outlined"
+                    helperText={errors.billingStreet?.message}
+                    InputProps={{
+                      ...field,
+                    }}
+                  />
+                )}
+              />
+            )}
+            {!isDisabled && (
+              <Controller
+                name="billingCity"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    disabled={isDisabled}
+                    label="City"
+                    fullWidth
+                    error={!!errors.billingCity}
+                    variant="outlined"
+                    helperText={errors.billingCity?.message}
+                    InputProps={{
+                      ...field,
+                    }}
+                  />
+                )}
+              />
+            )}
+            {!isDisabled && (
+              <Controller
+                name="billingCountry"
+                control={control}
+                defaultValue=""
+                render={({ field }) => {
+                  const { value, onChange } = field;
+                  const country = value
+                    ? countries.find((opt) => value === opt.value) ?? null
+                    : null;
+                  return (
+                    <Autocomplete
+                      disabled={isDisabled}
+                      value={country}
+                      options={countries}
+                      onChange={(event, newValue) => {
+                        onChange(newValue ? newValue.value : null);
+                      }}
+                      renderOption={(props, option) => (
+                        <Box component="li" {...props}>
+                          {option.label}
+                        </Box>
+                      )}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Choose a country"
+                          error={!!errors.billingCountry}
+                          helperText={errors.billingCountry?.message}
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: "new-password",
+                          }}
+                        />
+                      )}
+                    />
+                  );
+                }}
+              />
+            )}
+            {!isDisabled && (
+              <Controller
+                name="billingPostcode"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    disabled={isDisabled}
+                    label="Postal code"
+                    fullWidth
+                    error={!!errors.billingPostcode}
+                    variant="outlined"
+                    helperText={errors.billingPostcode?.message}
+                    InputProps={{
+                      ...field,
+                    }}
+                  />
+                )}
+              />
+            )}
+            <Button
+              className="button"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Submit
+            </Button>
+          </form>
+        </Paper>
+
         <Typography variant="h6">
           Already have an account?{" "}
           <Link className={styles.link} to="/login">

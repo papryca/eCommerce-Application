@@ -1,34 +1,57 @@
 @import "../../sass/abstract/constants";
 
+.container,
+.promoCodeContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  max-width: 1200px;
+  height: 750px;
+  margin: 0 auto;
+  background-image: url("../../assets/images/background1.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .link {
-  padding-left: 50px;
+  display: none;
+  width: 350px;
+  margin-top: 0;
 }
 
 .promoCodeContainer {
-  background: $color-info;
-  padding: 10px;
-  border: 1px solid $color-secondary;
+  gap: 20px;
+  width: 35%;
+  min-width: 350px;
+  padding: 20px 10px;
+  background: rgba(239, 209, 169, 0.55);
+  // background: rgba(239, 200, 169, 0.5);
+  // border: 0.5px solid $color-secondary;
   border-radius: 5px;
-  margin-top: 20px;
   text-align: center;
-  animation: blinkAnimation 3s ease-in-out infinite;
+  // animation: blinkAnimation 3s ease-in-out infinite;
 }
 
-@keyframes blinkAnimation {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-  100% {
-    opacity: 1;
-  }
-}
+// @keyframes blinkAnimation {
+//   0% {
+//     opacity: 1;
+//   }
+//   50% {
+//     opacity: 0.7;
+//   }
+//   100% {
+//     opacity: 1;
+//   }
+// }
 
 .activePromoCode {
   font-size: 18px;
-  color: $color-text;
+  color: $main-page-text;
   font-weight: bold;
 }
 

@@ -1,4 +1,5 @@
 @import "../../sass/abstract/constants";
+
 .aboutAs {
   display: flex;
   justify-content: space-between;
@@ -6,12 +7,19 @@
   max-width: 84%;
   margin: 0 auto;
 }
+
 .cart {
   display: flex;
   justify-content: center;
 }
 
+.implemented {
+  margin-bottom: 15px;
+}
+
 .modal {
+  display: flex;
+  flex-direction: column;
   width: calc(100% - 2em);
   max-width: 500px;
   position: absolute;
@@ -20,21 +28,32 @@
   transform: translate(-50%, -50%);
   background-color: white;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 20px;
 }
-.name {
+
+.name,
+.text {
   display: flex;
   flex-direction: column;
 }
+
 .header {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
+  gap: 10px;
 }
+
 .text {
   margin: 20px;
+  gap: 10px;
 }
+
+.linkContainer {
+  align-self: center;
+}
+
 .link {
   color: $color-primary-dark;
   text-decoration: none;
@@ -43,15 +62,18 @@
     text-decoration: underline;
   }
 }
+
 .cross {
   position: relative;
 }
+
 .close {
   position: absolute;
   top: 5px;
   right: 0;
   cursor: pointer;
 }
+
 .school {
   width: 100px;
   height: 100px;
@@ -59,6 +81,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .schoolLink {
   display: flex;
   justify-content: center;

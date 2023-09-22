@@ -31,7 +31,7 @@ const CartRoute: React.FC<IHeaderRoute> = ({ to, icon, label }) => {
   }, []);
 
   return (
-    <Link to={to} className={styles.link} color="inherit">
+    <Link to={to} className={styles.link}>
       <Box display="flex" alignItems="center">
         <Icon
           aria-label={label}
@@ -40,7 +40,7 @@ const CartRoute: React.FC<IHeaderRoute> = ({ to, icon, label }) => {
         >
           <IconButton aria-label="cart" style={{ padding: "0" }}>
             <Badge color="secondary" badgeContent={cartItemsCount}>
-              <span style={{ color: "#15528e" }}>{icon}</span>
+              <span>{icon}</span>
             </Badge>
           </IconButton>
         </Icon>
