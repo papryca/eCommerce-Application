@@ -19,6 +19,7 @@ const authHost = process.env.REACT_APP_AUTH_HOST;
 const clientId = process.env.REACT_APP_CLIENT_ID;
 const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
 const basicAuth = btoa(`${clientId}:${clientSecret}`);
+const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
 //  get an access token from the CommerceTools
 export const getAccessToken = async () => {
@@ -29,7 +30,7 @@ export const getAccessToken = async () => {
 
   try {
     const response: AxiosResponse<ITokenResponse> = await axios.post(
-      `${authHost}/oauth/ecommerce-app-final-task/anonymous/token?grant_type=client_credentials`,
+      `${authHost}/oauth/${projectKey}/anonymous/token?grant_type=client_credentials`,
       null,
       { headers }
     );
@@ -80,7 +81,7 @@ export const getAccessTokenPassFlow = async (
   console.log("data URL", data);
 
   const response: AxiosResponse<ITokenResponse> = await axios.post(
-    `${authHost}/oauth/ecommerce-app-final-task/customers/token`,
+    `${authHost}/oauth/${projectKey}/customers/token`,
     data.toString(),
     { headers }
   );
@@ -97,7 +98,6 @@ const loginCustomer = async (
   password: string
 ): Promise<IUserFullDataResponse> => {
   const apiHost = process.env.REACT_APP_API_HOST;
-  const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
   const headers = {
     "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const registrateCustomer = async (
   data: IRegistrateData
 ): Promise<ICustomerRegistrationResponse> => {
   const apiHost = process.env.REACT_APP_API_HOST;
-  const projectKey = process.env.REACT_APP_PROJECT_KEY;
+  // const projectKey = process.env.REACT_APP_PROJECT_KEY;
 
   const headers = {
     "Content-Type": "application/json",
